@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabaseClient";
-import { Shield, Mail, Lock, ArrowRight, Eye, EyeOff } from "lucide-react";
+import Image from "next/image";
+import { Mail, Lock, ArrowRight, Eye, EyeOff } from "lucide-react";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -44,27 +45,24 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#111111] px-4 relative overflow-hidden">
-      {/* Background glows */}
       <div className="absolute top-1/4 -left-32 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="w-full max-w-md relative z-10">
-        {/* Logo / Brand */}
         <div className="flex flex-col items-center mb-10">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-white/20 to-white/5 backdrop-blur-sm flex items-center justify-center border border-white/10 shadow-[0_0_30px_rgba(255,255,255,0.1)] mb-5">
-            <Shield className="w-7 h-7 text-white" />
+          <div className="mb-5">
+            <Image src="/logo-wide.png" alt="AgencyDash" width={180} height={50} priority />
           </div>
           <h1 className="text-3xl font-bold text-white tracking-tight">
             {mode === "login" ? "Welcome back" : "Get started"}
           </h1>
           <p className="text-gray-400 mt-2 text-center">
             {mode === "login"
-              ? "Sign in to your AgencyDash account"
+              ? "Sign in to your account"
               : "Create your account to begin"}
           </p>
         </div>
 
-        {/* Card */}
         <div className="glass-panel rounded-3xl p-8 border border-white/5">
           {error && (
             <div className={`mb-5 p-4 rounded-xl text-sm flex items-start gap-2 ${
