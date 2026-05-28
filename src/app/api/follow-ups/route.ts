@@ -1,0 +1,75 @@
+import { NextResponse } from 'next/server';
+import { supabase } from '@/lib/supabase';
+
+export async function GET() {
+  if (!supabase) {
+    return NextResponse.json([]);
+  }
+
+  const { data, error } = await supabase
+    .from('follow_ups')
+    .select(`*, clients (name, email, company)`)
+    .order('scheduled_date', { ascending: true });
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  return NextResponse.json(data);
+}
+
+export async function POST(request: Request) {
+  if (!supabase) {
+    return NextResponse.json({ error: 'Supabase not configured' }, { status: 503 });
+  }
+
+  const body = await request.json();
+  const { data, error } = await supabase.from('follow_ups').insert(body).select().single();
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  return NextResponse.json(data, { status: 201 });
+}
+
+export async function PATCH(request: Request) {
+  if (!supabase) {
+    return NextResponse.json({ error: 'Supabase not configured' }, { status: 503 });
+  }
+
+  const { id, ...updates } = await request.json();
+  const { data, error } = await supabase
+    .from('follow_ups')
+    .update(updates)
+    .eq('id', id)
+    .select()
+    .single();
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  return NextResponse.json(data);
+}
+
+export async function DELETE(request: Request) {
+  if (!supabase) {
+    return NextResponse.json({ error: 'Supabase not configured' }, { status: 503 });
+  }
+
+  const { searchParams } = new URL(request.url);
+  const id = searchParams.get('id');
+
+  if (!id) {
+    return NextResponse.json({ error: 'Missing id parameter' }, { status: 400 });
+  }
+
+  const { error } = await supabase.from('follow_ups').delete().eq('id', id);
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  return NextResponse.json({ success: true });
+}
