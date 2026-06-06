@@ -101,7 +101,7 @@ export default function TicketsPage() {
     fetch(`/api/tasks?ticket_id=${ticket.id}`)
       .then((r) => r.json())
       .then((data) => {
-        setLinkedTask(data && data.length > 0 ? data[0] : null);
+        setLinkedTask(Array.isArray(data) && data.length > 0 ? data[0] : null);
       })
       .catch(() => setLinkedTask(null));
   }
@@ -358,10 +358,10 @@ export default function TicketsPage() {
                       <span className="text-white">{linkedTask.type.charAt(0).toUpperCase() + linkedTask.type.slice(1)}</span>
                     </div>
                   )}
-                  {linkedTask.team_members?.name && (
+                  {(linkedTask.profiles?.full_name || linkedTask.profiles?.email) && (
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-400">Assignee</span>
-                      <span className="text-white">{linkedTask.team_members.name}</span>
+                      <span className="text-white">{linkedTask.profiles.full_name || linkedTask.profiles.email}</span>
                     </div>
                   )}
                   {linkedTask.due_date && (
@@ -422,7 +422,7 @@ export default function TicketsPage() {
               fetch(`/api/tasks?ticket_id=${selectedTicket.id}`)
                 .then((r) => r.json())
                 .then((data) => {
-                  setLinkedTask(data && data.length > 0 ? data[0] : null);
+                  setLinkedTask(Array.isArray(data) && data.length > 0 ? data[0] : null);
                 })
                 .catch(() => {});
             }

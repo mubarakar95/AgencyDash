@@ -58,7 +58,7 @@ interface TaskItem {
   image_urls: string[];
   estimated_hours: number | null;
   projects?: { id: string; name: string; icon_url?: string | null } | null;
-  team_members?: { id: string; name: string } | null;
+  profiles?: { id: string; full_name: string; email?: string } | null;
   tickets?: { id: string; title: string; status: string } | null;
   [key: string]: unknown;
 }
@@ -144,19 +144,25 @@ function TaskCard({ task, onEdit, onDelete, onTaskClick, isDragging, dragListene
 
       <div className="flex items-center justify-between mt-2 pt-2 border-t border-white/5">
         <div className="flex items-center gap-2">
-          {task.team_members?.name ? (
-            <div className="flex items-center gap-1.5">
-              <div className="w-5 h-5 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-white text-[8px] font-bold">
-                {task.team_members.name.charAt(0)}
+          {(() => {
+            const p = task.profiles;
+            const name = p?.full_name || p?.email;
+            return name ? (
+              <div className="flex items-center gap-1.5">
+                <div className="w-5 h-5 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-white text-[8px] font-bold">
+                  {name.charAt(0)}
+                </div>
+                <span className="text-[10px] text-gray-400">
+                  {name.split(" ")[0]}
+                </span>
               </div>
-              <span className="text-[10px] text-gray-400">{task.team_members.name.split(" ")[0]}</span>
-            </div>
-          ) : (
-            <div className="flex items-center gap-1.5">
-              <User className="w-3 h-3 text-gray-600" />
-              <span className="text-[10px] text-gray-600">Unassigned</span>
-            </div>
-          )}
+            ) : (
+              <div className="flex items-center gap-1.5">
+                <User className="w-3 h-3 text-gray-600" />
+                <span className="text-[10px] text-gray-600">Unassigned</span>
+              </div>
+            );
+          })()}
           {task.due_date && (
             <div className={`flex items-center gap-1 ${isOverdue ? "text-red-400" : "text-gray-500"}`}>
               <Calendar className="w-2.5 h-2.5" />

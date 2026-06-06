@@ -1,4 +1,4 @@
-import { Project, Client, Renewal, TeamMember } from "@/types";
+import { Project, Client, Renewal } from "@/types";
 
 export const mockProjects: Project[] = [
   { id: "1", name: "E-Commerce Redesign", client: "Acme Corp", status: "in-progress", deadline: "2026-06-15", progress: 65, budget: 15000, spent: 8750 },
@@ -24,9 +24,3 @@ export const mockRenewals: Renewal[] = [
   { id: "5", assetName: "Analytics License", type: "license", client: "In-House", expiryDate: "2026-07-15", cost: 200, provider: "Plausible", status: "warning" },
 ];
 
-export const mockTeam: TeamMember[] = [
-  { id: "1", name: "Alice Chen", email: "alice@agency.com", role: "Senior Developer", tags: ["frontend", "react"], workload: 85, activeProjects: 3 },
-  { id: "2", name: "Bob Smith", email: "bob@agency.com", role: "Backend Developer", tags: ["backend", "node", "python"], workload: 60, activeProjects: 2 },
-  { id: "3", name: "Charlie Kim", email: "charlie@agency.com", role: "Designer", tags: ["ui/ux", "figma"], workload: 40, activeProjects: 1 },
-  { id: "4", name: "Dana Lee", email: "dana@agency.com", role: "DevOps", tags: ["devops", "aws", "docker"], workload: 70, activeProjects: 2 },
-];

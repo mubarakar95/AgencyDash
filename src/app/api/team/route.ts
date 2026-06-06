@@ -1,16 +1,16 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
-import { mockTeam } from '@/data/mockData';
 
 export async function GET() {
   if (!supabase) {
-    return NextResponse.json(mockTeam);
+    return NextResponse.json([]);
   }
 
   const { data, error } = await supabase
-    .from('team_members')
-    .select('*')
-    .order('created_at', { ascending: false });
+    .from('profiles')
+    .select('id, full_name, email, role')
+    .in('role', ['developer', 'admin'])
+    .order('full_name', { ascending: true });
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -19,17 +19,6 @@ export async function GET() {
   return NextResponse.json(data);
 }
 
-export async function POST(request: Request) {
-  if (!supabase) {
-    return NextResponse.json({ error: 'Supabase not configured' }, { status: 503 });
-  }
-
-  const body = await request.json();
-  const { data, error } = await supabase.from('team_members').insert(body).select().single();
-
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
-
-  return NextResponse.json(data, { status: 201 });
+export async function POST() {
+  return NextResponse.json({ error: 'Use admin panel to manage user accounts' }, { status: 400 });
 }

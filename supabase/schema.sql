@@ -140,7 +140,7 @@ create table if not exists tasks (
   status text not null default 'backlog' check (status in ('backlog', 'todo', 'in_progress', 'review', 'done')),
   priority text not null default 'medium' check (priority in ('low', 'medium', 'high', 'urgent')),
   type text not null default 'task' check (type in ('bug', 'feature', 'task', 'improvement')),
-  assignee_id uuid references team_members(id),
+  assignee_id uuid references profiles(id),
   due_date date,
   ticket_id uuid references tickets(id),
   image_url text,

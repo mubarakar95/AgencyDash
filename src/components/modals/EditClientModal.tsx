@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Modal } from "@/components/ui/Modal";
 import { NewInvoiceModal } from "@/components/modals/NewInvoiceModal";
+import { Search, FolderKanban, RefreshCw, FileText } from "lucide-react";
 
 interface Client {
   id: string;
@@ -40,6 +41,9 @@ export function EditClientModal({ isOpen, onClose, onSuccess, client }: EditClie
   const [selectedUserId, setSelectedUserId] = useState<string>("");
   const [invoices, setInvoices] = useState<any[]>([]);
   const [showNewInvoice, setShowNewInvoice] = useState(false);
+  const [activeTab, setActiveTab] = useState<"projects" | "renewals" | "invoices">("projects");
+  const [searchProjects, setSearchProjects] = useState("");
+  const [searchRenewals, setSearchRenewals] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -161,240 +165,317 @@ export function EditClientModal({ isOpen, onClose, onSuccess, client }: EditClie
   ];
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Edit Client" maxWidth="max-w-2xl">
+    <Modal isOpen={isOpen} onClose={onClose} title="Edit Client" maxWidth="max-w-4xl">
       {error && (
-        <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-sm">
+        <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-sm">
           {error}
         </div>
       )}
       <form onSubmit={handleSubmit}>
-        <div className="grid grid-cols-2 gap-6">
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">Name *</label>
-              <input
-                type="text"
-                required
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full px-4 py-2.5 bg-[#222226] border border-white/10 rounded-xl text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-white/20 transition-colors"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">Email *</label>
-              <input
-                type="email"
-                required
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full px-4 py-2.5 bg-[#222226] border border-white/10 rounded-xl text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-white/20 transition-colors"
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-3">
+        <div className="space-y-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">Phone</label>
-                <input
-                  type="tel"
-                  value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className="w-full px-4 py-2.5 bg-[#222226] border border-white/10 rounded-xl text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-white/20 transition-colors"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">Company</label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Name *</label>
                 <input
                   type="text"
-                  value={formData.company}
-                  onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                  className="w-full px-4 py-2.5 bg-[#222226] border border-white/10 rounded-xl text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-white/20 transition-colors"
+                  required
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  className="w-full px-5 py-3 bg-[#222226] border border-white/10 rounded-xl text-base text-white placeholder:text-gray-500 focus:outline-none focus:border-white/20 transition-colors"
+                  placeholder="Client name"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Email *</label>
+                <input
+                  type="email"
+                  required
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  className="w-full px-5 py-3 bg-[#222226] border border-white/10 rounded-xl text-base text-white placeholder:text-gray-500 focus:outline-none focus:border-white/20 transition-colors"
+                  placeholder="client@example.com"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Phone</label>
+                  <input
+                    type="tel"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    className="w-full px-5 py-3 bg-[#222226] border border-white/10 rounded-xl text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-white/20 transition-colors"
+                    placeholder="+1 555-0000"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Company</label>
+                  <input
+                    type="text"
+                    value={formData.company}
+                    onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                    className="w-full px-5 py-3 bg-[#222226] border border-white/10 rounded-xl text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-white/20 transition-colors"
+                    placeholder="Company name"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Status</label>
+                <div className="flex flex-wrap gap-2">
+                  {statuses.map((s) => (
+                    <button
+                      key={s.value}
+                      type="button"
+                      onClick={() => setFormData({ ...formData, status: s.value })}
+                      className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                        formData.status === s.value
+                          ? "bg-white text-gray-900 shadow-[0_0_10px_rgba(255,255,255,0.2)]"
+                          : "bg-[#222226] text-gray-400 border border-white/10 hover:text-white hover:border-white/20"
+                      }`}
+                    >
+                      {s.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Linked User</label>
+                <select
+                  value={selectedUserId}
+                  onChange={(e) => setSelectedUserId(e.target.value)}
+                  className="w-full px-5 py-3 bg-[#222226] border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-white/20 transition-colors appearance-none"
+                >
+                  <option value="" className="bg-[#222226]">No linked user</option>
+                  {clientProfiles.map((p: any) => (
+                    <option key={p.id} value={p.id} className="bg-[#222226]">
+                      {p.full_name || p.email}
+                    </option>
+                  ))}
+                </select>
+                <p className="text-xs text-gray-500 mt-2">Link a client user account for portal access</p>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Notes</label>
+                <textarea
+                  rows={3}
+                  value={formData.notes}
+                  onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                  className="w-full px-5 py-3 bg-[#222226] border border-white/10 rounded-xl text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-white/20 transition-colors resize-y min-h-[80px]"
+                  placeholder="Add notes about this client..."
                 />
               </div>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Status</label>
-              <div className="flex flex-wrap gap-2">
-                {statuses.map((s) => (
-                  <button
-                    key={s.value}
-                    type="button"
-                    onClick={() => setFormData({ ...formData, status: s.value })}
-                    className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                      formData.status === s.value
-                        ? "bg-white text-gray-900 shadow-[0_0_10px_rgba(255,255,255,0.2)]"
-                        : "bg-[#222226] text-gray-400 border border-white/10 hover:text-white hover:border-white/20"
-                    }`}
-                  >
-                    {s.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">Linked User</label>
-              <select
-                value={selectedUserId}
-                onChange={(e) => setSelectedUserId(e.target.value)}
-                className="w-full px-4 py-2.5 bg-[#222226] border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-white/20 transition-colors appearance-none"
-              >
-                <option value="" className="bg-[#222226]">No linked user</option>
-                {clientProfiles.map((p: any) => (
-                  <option key={p.id} value={p.id} className="bg-[#222226]">
-                    {p.full_name || p.email}
-                  </option>
-                ))}
-              </select>
-              <p className="text-xs text-gray-500 mt-1">Link a client user account for portal access</p>
-            </div>
-          </div>
 
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">
-                Projects <span className="text-gray-500 font-normal">({selectedProjects.length})</span>
-              </label>
-              <div className="max-h-[180px] overflow-y-auto space-y-1.5 pr-1">
-                {projects.length === 0 ? (
-                  <p className="text-xs text-gray-500 py-4 text-center">No projects yet</p>
-                ) : (
-                  projects.map((project: any) => (
-                    <label
-                      key={project.id}
-                      className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer transition-colors ${
-                        selectedProjects.includes(project.id)
-                          ? "bg-white/10 border border-white/20"
-                          : "bg-[#222226] border border-white/5 hover:border-white/10"
-                      }`}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={selectedProjects.includes(project.id)}
-                        onChange={() => toggleProject(project.id)}
-                        className="w-3.5 h-3.5 rounded border-gray-600 text-white focus:ring-white/20 bg-[#111111]"
-                      />
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm text-white truncate">{project.name}</p>
-                      </div>
-                      {project.icon_url ? (
-                        <img src={project.icon_url} alt="" className="w-5 h-5 rounded object-cover shrink-0" />
-                      ) : (
-                        <div className="w-5 h-5 rounded bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-white text-[7px] font-bold shrink-0">
-                          {project.name?.charAt(0)}
-                        </div>
-                      )}
-                    </label>
-                  ))
-                )}
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">
-                Renewals <span className="text-gray-500 font-normal">({selectedRenewals.length})</span>
-              </label>
-              <div className="max-h-[140px] overflow-y-auto space-y-1.5 pr-1">
-                {renewals.length === 0 ? (
-                  <p className="text-xs text-gray-500 py-4 text-center">No renewals yet</p>
-                ) : (
-                  renewals.map((renewal: any) => (
-                    <label
-                      key={renewal.id}
-                      className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer transition-colors ${
-                        selectedRenewals.includes(renewal.id)
-                          ? "bg-white/10 border border-white/20"
-                          : "bg-[#222226] border border-white/5 hover:border-white/10"
-                      }`}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={selectedRenewals.includes(renewal.id)}
-                        onChange={() => toggleRenewal(renewal.id)}
-                        className="w-3.5 h-3.5 rounded border-gray-600 text-white focus:ring-white/20 bg-[#111111]"
-                      />
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm text-white truncate">{renewal.asset_name}</p>
-                        <p className="text-[10px] text-gray-500">{renewal.type} · ${renewal.cost || 0}</p>
-                      </div>
-                      <span className="text-xs shrink-0">{renewalTypeIcon[renewal.type] || "📄"}</span>
-                    </label>
-                  ))
-                )}
-              </div>
-            </div>
-
-            <div>
-              <div className="flex items-center justify-between mb-1">
-                <label className="block text-sm font-medium text-gray-300">
-                  Invoices <span className="text-gray-500 font-normal">({invoices.length})</span>
-                </label>
+            <div className="flex flex-col min-h-0">
+              <div className="flex border-b border-white/10 mb-4">
                 <button
                   type="button"
-                  onClick={() => setShowNewInvoice(true)}
-                  className="text-xs text-white bg-white/10 hover:bg-white/20 px-2.5 py-1 rounded-lg transition-colors"
+                  onClick={() => setActiveTab("projects")}
+                  className={`flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                    activeTab === "projects"
+                      ? "border-white text-white"
+                      : "border-transparent text-gray-500 hover:text-gray-300"
+                  }`}
                 >
-                  + New
+                  <FolderKanban className="w-4 h-4" />
+                  Projects
+                  <span className="ml-1 text-xs bg-white/10 px-2 py-0.5 rounded-full">{selectedProjects.length}</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("renewals")}
+                  className={`flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                    activeTab === "renewals"
+                      ? "border-white text-white"
+                      : "border-transparent text-gray-500 hover:text-gray-300"
+                  }`}
+                >
+                  <RefreshCw className="w-4 h-4" />
+                  Renewals
+                  <span className="ml-1 text-xs bg-white/10 px-2 py-0.5 rounded-full">{selectedRenewals.length}</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("invoices")}
+                  className={`flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                    activeTab === "invoices"
+                      ? "border-white text-white"
+                      : "border-transparent text-gray-500 hover:text-gray-300"
+                  }`}
+                >
+                  <FileText className="w-4 h-4" />
+                  Invoices
+                  <span className="ml-1 text-xs bg-white/10 px-2 py-0.5 rounded-full">{invoices.length}</span>
                 </button>
               </div>
-              <div className="max-h-[140px] overflow-y-auto space-y-1.5 pr-1">
-                {invoices.length === 0 ? (
-                  <p className="text-xs text-gray-500 py-4 text-center">No invoices yet</p>
-                ) : (
-                  invoices.map((inv: any) => {
-                    const statusColors: Record<string, string> = {
-                      draft: "text-gray-400",
-                      sent: "text-blue-400",
-                      paid: "text-emerald-400",
-                      overdue: "text-red-400",
-                    };
-                    return (
-                      <a
-                        key={inv.id}
-                        href={`/invoices/${inv.id}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-3 p-2 rounded-lg bg-[#222226] border border-white/5 hover:border-white/10 transition-colors"
+
+              <div className="flex-1 min-h-0 overflow-hidden">
+                {activeTab === "projects" && (
+                  <div className="h-full flex flex-col">
+                    <div className="relative mb-3">
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                      <input
+                        type="text"
+                        value={searchProjects}
+                        onChange={(e) => setSearchProjects(e.target.value)}
+                        placeholder="Search projects..."
+                        className="w-full pl-9 pr-4 py-2.5 bg-[#222226] border border-white/10 rounded-xl text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-white/20 transition-colors"
+                      />
+                    </div>
+                    <div className="flex-1 overflow-y-auto space-y-2 pr-1 min-h-0">
+                      {projects.length === 0 ? (
+                        <p className="text-sm text-gray-500 py-8 text-center">No projects yet</p>
+                      ) : (
+                        projects
+                          .filter((p: any) => p.name?.toLowerCase().includes(searchProjects.toLowerCase()))
+                          .map((project: any) => (
+                            <label
+                              key={project.id}
+                              className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-colors ${
+                                selectedProjects.includes(project.id)
+                                  ? "bg-white/10 border border-white/20"
+                                  : "bg-[#222226] border border-white/5 hover:border-white/10"
+                              }`}
+                            >
+                              <input
+                                type="checkbox"
+                                checked={selectedProjects.includes(project.id)}
+                                onChange={() => toggleProject(project.id)}
+                                className="w-4 h-4 rounded border-gray-600 text-white focus:ring-white/20 bg-[#111111]"
+                              />
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm text-white truncate">{project.name}</p>
+                              </div>
+                              {project.icon_url ? (
+                                <img src={project.icon_url} alt="" className="w-6 h-6 rounded object-cover shrink-0" />
+                              ) : (
+                                <div className="w-6 h-6 rounded bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-white text-[8px] font-bold shrink-0">
+                                  {project.name?.charAt(0)}
+                                </div>
+                              )}
+                            </label>
+                          ))
+                      )}
+                      {searchProjects && projects.filter((p: any) => p.name?.toLowerCase().includes(searchProjects.toLowerCase())).length === 0 && (
+                        <p className="text-sm text-gray-500 py-8 text-center">No matching projects</p>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === "renewals" && (
+                  <div className="h-full flex flex-col">
+                    <div className="relative mb-3">
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                      <input
+                        type="text"
+                        value={searchRenewals}
+                        onChange={(e) => setSearchRenewals(e.target.value)}
+                        placeholder="Search renewals..."
+                        className="w-full pl-9 pr-4 py-2.5 bg-[#222226] border border-white/10 rounded-xl text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-white/20 transition-colors"
+                      />
+                    </div>
+                    <div className="flex-1 overflow-y-auto space-y-2 pr-1 min-h-0">
+                      {renewals.length === 0 ? (
+                        <p className="text-sm text-gray-500 py-8 text-center">No renewals yet</p>
+                      ) : (
+                        renewals
+                          .filter((r: any) => r.asset_name?.toLowerCase().includes(searchRenewals.toLowerCase()))
+                          .map((renewal: any) => (
+                            <label
+                              key={renewal.id}
+                              className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-colors ${
+                                selectedRenewals.includes(renewal.id)
+                                  ? "bg-white/10 border border-white/20"
+                                  : "bg-[#222226] border border-white/5 hover:border-white/10"
+                              }`}
+                            >
+                              <input
+                                type="checkbox"
+                                checked={selectedRenewals.includes(renewal.id)}
+                                onChange={() => toggleRenewal(renewal.id)}
+                                className="w-4 h-4 rounded border-gray-600 text-white focus:ring-white/20 bg-[#111111]"
+                              />
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm text-white truncate">{renewal.asset_name}</p>
+                                <p className="text-xs text-gray-500">{renewal.type} · ${renewal.cost || 0}</p>
+                              </div>
+                              <span className="text-sm shrink-0">{renewalTypeIcon[renewal.type] || "📄"}</span>
+                            </label>
+                          ))
+                      )}
+                      {searchRenewals && renewals.filter((r: any) => r.asset_name?.toLowerCase().includes(searchRenewals.toLowerCase())).length === 0 && (
+                        <p className="text-sm text-gray-500 py-8 text-center">No matching renewals</p>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === "invoices" && (
+                  <div className="h-full flex flex-col">
+                    <div className="flex items-center justify-between mb-3">
+                      <p className="text-sm text-gray-400">All invoices for this client</p>
+                      <button
+                        type="button"
+                        onClick={() => setShowNewInvoice(true)}
+                        className="text-sm text-white bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg transition-colors"
                       >
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm text-white truncate">{inv.invoice_number}</p>
-                          <p className="text-[10px] text-gray-500">{inv.projects?.name || "No project"}</p>
-                        </div>
-                        <div className="text-right shrink-0">
-                          <p className="text-sm font-medium text-white">${Number(inv.amount || 0).toFixed(2)}</p>
-                          <p className={`text-[10px] ${statusColors[inv.status] || "text-gray-500"}`}>
-                            {inv.status?.charAt(0).toUpperCase() + inv.status?.slice(1)}
-                          </p>
-                        </div>
-                      </a>
-                    );
-                  })
+                        + New Invoice
+                      </button>
+                    </div>
+                    <div className="flex-1 overflow-y-auto space-y-2 pr-1 min-h-0">
+                      {invoices.length === 0 ? (
+                        <p className="text-sm text-gray-500 py-8 text-center">No invoices yet</p>
+                      ) : (
+                        invoices.map((inv: any) => {
+                          const statusColors: Record<string, string> = {
+                            draft: "text-gray-400",
+                            sent: "text-blue-400",
+                            paid: "text-emerald-400",
+                            overdue: "text-red-400",
+                          };
+                          return (
+                            <a
+                              key={inv.id}
+                              href={`/invoices/${inv.id}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-3 p-3 rounded-xl bg-[#222226] border border-white/5 hover:border-white/10 transition-colors"
+                            >
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm text-white truncate">{inv.invoice_number}</p>
+                                <p className="text-xs text-gray-500">{inv.projects?.name || "No project"}</p>
+                              </div>
+                              <div className="text-right shrink-0">
+                                <p className="text-sm font-medium text-white">${Number(inv.amount || 0).toFixed(2)}</p>
+                                <p className={`text-xs ${statusColors[inv.status] || "text-gray-500"}`}>
+                                  {inv.status?.charAt(0).toUpperCase() + inv.status?.slice(1)}
+                                </p>
+                              </div>
+                            </a>
+                          );
+                        })
+                      )}
+                    </div>
+                  </div>
                 )}
               </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">Notes</label>
-              <textarea
-                rows={2}
-                value={formData.notes}
-                onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                className="w-full px-4 py-2.5 bg-[#222226] border border-white/10 rounded-xl text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-white/20 transition-colors resize-none"
-                placeholder="Add notes..."
-              />
             </div>
           </div>
         </div>
 
-        <div className="flex justify-end gap-3 pt-6 mt-4 border-t border-white/5">
+        <div className="flex justify-end gap-3 pt-8 mt-8 border-t border-white/5">
           <button
             type="button"
             onClick={onClose}
-            className="px-5 py-2.5 text-sm font-medium text-gray-400 hover:text-white rounded-xl transition-colors"
+            className="px-6 py-3 text-sm font-medium text-gray-400 hover:text-white rounded-xl transition-colors"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={loading}
-            className="px-5 py-2.5 bg-white text-gray-900 rounded-xl text-sm font-bold hover:scale-105 transition-transform disabled:opacity-50 shadow-[0_0_15px_rgba(255,255,255,0.15)]"
+            className="px-6 py-3 bg-white text-gray-900 rounded-xl text-sm font-bold hover:scale-105 transition-transform disabled:opacity-50 shadow-[0_0_15px_rgba(255,255,255,0.15)]"
           >
             {loading ? "Saving..." : "Save Changes"}
           </button>

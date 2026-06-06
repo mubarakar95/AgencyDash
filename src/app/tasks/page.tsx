@@ -4,18 +4,20 @@ import { useEffect, useState } from "react";
 import { KanbanBoard } from "@/components/ui/KanbanBoard";
 import { NewTaskModal } from "@/components/modals/NewTaskModal";
 import { EditTaskModal } from "@/components/modals/EditTaskModal";
+import { TaskDetailModal } from "@/components/modals/TaskDetailModal";
 import { DeleteConfirmDialog } from "@/components/ui/DeleteConfirmDialog";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   ClipboardList,
   Plus,
   Search,
-  Filter,
   Bug,
   Sparkles,
   ListTodo,
   Lightbulb,
   Timer,
   ImageIcon,
+  User,
 } from "lucide-react";
 
 const typeFilterConfig: Record<string, { icon: React.ElementType; label: string; active: string }> = {
@@ -26,24 +28,32 @@ const typeFilterConfig: Record<string, { icon: React.ElementType; label: string;
 };
 
 export default function TasksPage() {
+  const { user, role } = useAuth();
   const [tasks, setTasks] = useState<any[]>([]);
   const [projects, setProjects] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showNewTask, setShowNewTask] = useState(false);
+  const [viewingTask, setViewingTask] = useState<any>(null);
   const [editingTask, setEditingTask] = useState<any>(null);
   const [deletingTask, setDeletingTask] = useState<any>(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterProject, setFilterProject] = useState("");
   const [filterType, setFilterType] = useState("");
+  const [filterAssignee, setFilterAssignee] = useState("");
   const [viewMode, setViewMode] = useState<"kanban" | "list">("kanban");
 
   function fetchTasks() {
     setLoading(true);
-    fetch("/api/tasks")
+    const params = new URLSearchParams();
+    if (filterAssignee === "mine" && user) {
+      params.set("assignee_id", user.id);
+    }
+    const qs = params.toString();
+    fetch(`/api/tasks${qs ? `?${qs}` : ""}`)
       .then((res) => res.json())
       .then((data) => {
-        setTasks(data || []);
+        setTasks(Array.isArray(data) ? data : []);
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -51,6 +61,9 @@ export default function TasksPage() {
 
   useEffect(() => {
     fetchTasks();
+  }, [filterAssignee]);
+
+  useEffect(() => {
     fetch("/api/projects").then((r) => r.json()).then(setProjects).catch(() => {});
   }, []);
 
@@ -202,6 +215,19 @@ export default function TasksPage() {
             );
           })}
         </div>
+        {user && (
+          <button
+            onClick={() => setFilterAssignee(filterAssignee === "mine" ? "" : "mine")}
+            className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium transition-all border ${
+              filterAssignee === "mine"
+                ? "bg-blue-500/20 text-blue-300 border-blue-500/30"
+                : "bg-[#222226] border-white/10 text-gray-400 hover:text-white hover:border-white/20"
+            }`}
+          >
+            <User className="w-3.5 h-3.5" />
+            My Tasks
+          </button>
+        )}
         <div className="flex items-center gap-1 bg-[#222226] rounded-xl border border-white/10 p-1">
           <button
             onClick={() => setViewMode("kanban")}
@@ -236,6 +262,7 @@ export default function TasksPage() {
               onEdit={setEditingTask}
               onDelete={setDeletingTask}
               onStatusChange={handleStatusChange}
+              onTaskClick={setViewingTask}
             />
           )}
         </div>
@@ -285,7 +312,7 @@ export default function TasksPage() {
                       <tr
                         key={task.id}
                         className="border-b border-gray-100 border-dashed last:border-0 hover:bg-gray-50/50 transition-colors cursor-pointer group"
-                        onClick={() => setEditingTask(task)}
+                        onClick={() => setViewingTask(task)}
                       >
 <td className="py-4">
                           <div className="flex items-center gap-3">
@@ -334,12 +361,12 @@ export default function TasksPage() {
                           )}
                         </td>
                         <td className="py-4">
-                          {task.team_members?.name ? (
+                          {task.profiles?.full_name || task.profiles?.email ? (
                             <div className="flex items-center gap-1.5">
                               <div className="w-5 h-5 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-white text-[8px] font-bold">
-                                {task.team_members.name.charAt(0)}
+                                {(task.profiles.full_name || task.profiles.email).charAt(0)}
                               </div>
-                              <span className="text-xs text-gray-600">{task.team_members.name.split(" ")[0]}</span>
+                              <span className="text-xs text-gray-600">{(task.profiles.full_name || task.profiles.email).split(" ")[0]}</span>
                             </div>
                           ) : (
                             <span className="text-xs text-gray-400">—</span>
@@ -368,6 +395,13 @@ export default function TasksPage() {
         isOpen={showNewTask}
         onClose={() => setShowNewTask(false)}
         onSuccess={fetchTasks}
+      />
+
+      <TaskDetailModal
+        isOpen={!!viewingTask}
+        onClose={() => setViewingTask(null)}
+        task={viewingTask}
+        onEdit={setEditingTask}
       />
 
       <EditTaskModal

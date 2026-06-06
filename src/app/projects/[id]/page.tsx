@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { KanbanBoard } from "@/components/ui/KanbanBoard";
 import { NewTaskModal } from "@/components/modals/NewTaskModal";
 import { EditTaskModal } from "@/components/modals/EditTaskModal";
+import { TaskDetailModal } from "@/components/modals/TaskDetailModal";
 import { DeleteConfirmDialog } from "@/components/ui/DeleteConfirmDialog";
 import { EditProjectModal } from "@/components/modals/EditProjectModal";
 import {
@@ -43,6 +44,7 @@ export default function ProjectDetailPage() {
   const [deletingProject, setDeletingProject] = useState<any>(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [showNewTask, setShowNewTask] = useState(false);
+  const [viewingTask, setViewingTask] = useState<any>(null);
   const [editingTask, setEditingTask] = useState<any>(null);
   const [deletingTask, setDeletingTask] = useState<any>(null);
   const [taskDeleteLoading, setTaskDeleteLoading] = useState(false);
@@ -54,9 +56,9 @@ export default function ProjectDetailPage() {
       fetch(`/api/tasks?project_id=${projectId}`).then((r) => r.json()),
     ])
       .then(([pData, tData]) => {
-        const proj = (pData || []).find((p: any) => p.id === projectId);
+        const proj = (Array.isArray(pData) ? pData : []).find((p: any) => p.id === projectId);
         setProject(proj || null);
-        setTasks(tData || []);
+        setTasks(Array.isArray(tData) ? tData : []);
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -284,6 +286,7 @@ export default function ProjectDetailPage() {
             onEdit={setEditingTask}
             onDelete={setDeletingTask}
             onStatusChange={handleStatusChange}
+            onTaskClick={setViewingTask}
           />
         )}
       </div>
@@ -293,6 +296,13 @@ export default function ProjectDetailPage() {
         onClose={() => setShowNewTask(false)}
         onSuccess={fetchData}
         preselectedProjectId={projectId}
+      />
+
+      <TaskDetailModal
+        isOpen={!!viewingTask}
+        onClose={() => setViewingTask(null)}
+        task={viewingTask}
+        onEdit={setEditingTask}
       />
 
       <EditTaskModal

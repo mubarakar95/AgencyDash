@@ -140,192 +140,207 @@ export function NewTaskModal({ isOpen, onClose, onSuccess, preselectedProjectId,
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="New Task" maxWidth="max-w-2xl">
+    <Modal isOpen={isOpen} onClose={onClose} title="New Task" maxWidth="max-w-4xl">
       {error && (
-        <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-sm">{error}</div>
+        <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-sm">{error}</div>
       )}
       {preselectedTicketId && (
-        <div className="mb-4 p-3 bg-blue-500/10 border border-blue-500/20 rounded-xl flex items-center gap-2">
-          <Link2 className="w-4 h-4 text-blue-400 shrink-0" />
+        <div className="mb-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl flex items-center gap-2">
+          <Link2 className="w-5 h-5 text-blue-400 shrink-0" />
           <span className="text-sm text-blue-300">Linked to ticket — task will track this ticket&apos;s resolution</span>
         </div>
       )}
       <form onSubmit={handleSubmit}>
-        <div className="grid grid-cols-2 gap-6">
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">Title *</label>
-              <input
-                type="text"
-                required
-                value={formData.title}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                className="w-full px-4 py-2.5 bg-[#222226] border border-white/10 rounded-xl text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-white/20 transition-colors"
-                placeholder="Fix login error on mobile"
-              />
+        <div className="space-y-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="space-y-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Title *</label>
+                <input
+                  type="text"
+                  required
+                  value={formData.title}
+                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  className="w-full px-5 py-3 bg-[#222226] border border-white/10 rounded-xl text-base text-white placeholder:text-gray-500 focus:outline-none focus:border-white/20 transition-colors"
+                  placeholder="Enter task title..."
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Description</label>
+                <textarea
+                  rows={6}
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  className="w-full px-5 py-3 bg-[#222226] border border-white/10 rounded-xl text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-white/20 transition-colors resize-y min-h-[120px]"
+                  placeholder="Describe the task in detail..."
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Screenshots <span className="text-gray-500 font-normal">({imageUrls.length})</span>
+                </label>
+                {imageUrls.length > 0 && (
+                  <div className="grid grid-cols-3 gap-3 mb-3">
+                    {imageUrls.map((url, i) => (
+                      <div key={i} className="relative group rounded-xl overflow-hidden border border-white/10">
+                        <img src={url} alt={`Screenshot ${i + 1}`} className="w-full h-24 object-cover" />
+                        <button
+                          type="button"
+                          onClick={() => setImageUrls((prev) => prev.filter((_, idx) => idx !== i))}
+                          className="absolute top-1.5 right-1.5 p-1.5 rounded-lg bg-black/60 text-white hover:bg-black/80 transition-colors opacity-0 group-hover:opacity-100"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                <div
+                  onClick={() => imageInputRef.current?.click()}
+                  className="flex items-center gap-3 p-4 border-2 border-dashed border-white/10 rounded-xl cursor-pointer hover:border-white/20 transition-colors"
+                >
+                  {uploadingImage ? (
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" />
+                  ) : (
+                    <>
+                      <ImagePlus className="w-5 h-5 text-gray-500" />
+                      <span className="text-sm text-gray-500">Click to add screenshots</span>
+                    </>
+                  )}
+                </div>
+                <input
+                  ref={imageInputRef}
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleImageUpload}
+                  className="hidden"
+                />
+              </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">Description</label>
-              <textarea
-                rows={4}
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                className="w-full px-4 py-2.5 bg-[#222226] border border-white/10 rounded-xl text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-white/20 transition-colors resize-none"
-                placeholder="Describe the task..."
-              />
-            </div>
+            <div className="space-y-6">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Project</label>
+                  <select
+                    value={formData.project_id}
+                    onChange={(e) => setFormData({ ...formData, project_id: e.target.value })}
+                    className="w-full px-4 py-3 bg-[#222226] border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-white/20 transition-colors appearance-none"
+                  >
+                    <option value="" className="bg-[#222226]">No project</option>
+                    {projects.map((p: any) => (
+                      <option key={p.id} value={p.id} className="bg-[#222226]">{p.name}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Ticket ID</label>
+                  <input
+                    type="text"
+                    value={formData.ticket_id}
+                    onChange={(e) => setFormData({ ...formData, ticket_id: e.target.value })}
+                    className="w-full px-4 py-3 bg-[#222226] border border-white/10 rounded-xl text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-white/20 transition-colors"
+                    placeholder="Optional ticket ref"
+                  />
+                </div>
+              </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">
-                Screenshots <span className="text-gray-500 font-normal">({imageUrls.length})</span>
-              </label>
-              {imageUrls.length > 0 && (
-                <div className="grid grid-cols-3 gap-2 mb-2">
-                  {imageUrls.map((url, i) => (
-                    <div key={i} className="relative group rounded-lg overflow-hidden border border-white/10">
-                      <img src={url} alt={`Screenshot ${i + 1}`} className="w-full h-20 object-cover" />
-                      <button
-                        type="button"
-                        onClick={() => setImageUrls((prev) => prev.filter((_, idx) => idx !== i))}
-                        className="absolute top-1 right-1 p-1 rounded-md bg-black/60 text-white hover:bg-black/80 transition-colors opacity-0 group-hover:opacity-100"
-                      >
-                        <X className="w-3 h-3" />
-                      </button>
-                    </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Type</label>
+                <div className="flex flex-wrap gap-2">
+                  {types.map((t) => (
+                    <button
+                      key={t.value}
+                      type="button"
+                      onClick={() => setFormData({ ...formData, type: t.value })}
+                      className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                        formData.type === t.value
+                          ? "bg-white text-gray-900 shadow-[0_0_10px_rgba(255,255,255,0.2)]"
+                          : "bg-[#222226] text-gray-400 border border-white/10 hover:text-white hover:border-white/20"
+                      }`}
+                    >
+                      {t.label}
+                    </button>
                   ))}
                 </div>
-              )}
-              <div
-                onClick={() => imageInputRef.current?.click()}
-                className="flex items-center gap-2 p-3 border-2 border-dashed border-white/10 rounded-xl cursor-pointer hover:border-white/20 transition-colors"
-              >
-                {uploadingImage ? (
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
-                ) : (
-                  <>
-                    <ImagePlus className="w-4 h-4 text-gray-500" />
-                    <span className="text-xs text-gray-500">Add screenshots</span>
-                  </>
-                )}
               </div>
-              <input
-                ref={imageInputRef}
-                type="file"
-                accept="image/*"
-                multiple
-                onChange={handleImageUpload}
-                className="hidden"
-              />
-            </div>
-          </div>
 
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">Project</label>
-              <select
-                value={formData.project_id}
-                onChange={(e) => setFormData({ ...formData, project_id: e.target.value })}
-                className="w-full px-4 py-2.5 bg-[#222226] border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-white/20 transition-colors appearance-none"
-              >
-                <option value="" className="bg-[#222226]">No project</option>
-                {projects.map((p: any) => (
-                  <option key={p.id} value={p.id} className="bg-[#222226]">{p.name}</option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Type</label>
-              <div className="flex flex-wrap gap-2">
-                {types.map((t) => (
-                  <button
-                    key={t.value}
-                    type="button"
-                    onClick={() => setFormData({ ...formData, type: t.value })}
-                    className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                      formData.type === t.value
-                        ? "bg-white text-gray-900 shadow-[0_0_10px_rgba(255,255,255,0.2)]"
-                        : "bg-[#222226] text-gray-400 border border-white/10 hover:text-white hover:border-white/20"
-                    }`}
-                  >
-                    {t.label}
-                  </button>
-                ))}
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Priority</label>
+                <div className="flex flex-wrap gap-2">
+                  {priorities.map((p) => (
+                    <button
+                      key={p.value}
+                      type="button"
+                      onClick={() => setFormData({ ...formData, priority: p.value })}
+                      className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                        formData.priority === p.value
+                          ? "bg-white text-gray-900 shadow-[0_0_10px_rgba(255,255,255,0.2)]"
+                          : "bg-[#222226] text-gray-400 border border-white/10 hover:text-white hover:border-white/20"
+                      }`}
+                    >
+                      {p.label}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Priority</label>
-              <div className="flex flex-wrap gap-2">
-                {priorities.map((p) => (
-                  <button
-                    key={p.value}
-                    type="button"
-                    onClick={() => setFormData({ ...formData, priority: p.value })}
-                    className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                      formData.priority === p.value
-                        ? "bg-white text-gray-900 shadow-[0_0_10px_rgba(255,255,255,0.2)]"
-                        : "bg-[#222226] text-gray-400 border border-white/10 hover:text-white hover:border-white/20"
-                    }`}
-                  >
-                    {p.label}
-                  </button>
-                ))}
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Assignee</label>
+                <select
+                  value={formData.assignee_id}
+                  onChange={(e) => setFormData({ ...formData, assignee_id: e.target.value })}
+                  className="w-full px-4 py-3 bg-[#222226] border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-white/20 transition-colors appearance-none"
+                >
+                  <option value="" className="bg-[#222226]">Unassigned</option>
+                  {teamMembers.map((m: any) => (
+                    <option key={m.id} value={m.id} className="bg-[#222226]">{m.full_name || m.email}</option>
+                  ))}
+                </select>
               </div>
-            </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">Assignee</label>
-              <select
-                value={formData.assignee_id}
-                onChange={(e) => setFormData({ ...formData, assignee_id: e.target.value })}
-                className="w-full px-4 py-2.5 bg-[#222226] border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-white/20 transition-colors appearance-none"
-              >
-                <option value="" className="bg-[#222226]">Unassigned</option>
-                {teamMembers.map((m: any) => (
-                  <option key={m.id} value={m.id} className="bg-[#222226]">{m.name}</option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">Due Date</label>
-              <input
-                type="date"
-                value={formData.due_date}
-                onChange={(e) => setFormData({ ...formData, due_date: e.target.value })}
-                className="w-full px-4 py-2.5 bg-[#222226] border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-white/20 transition-colors"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">Est. Hours</label>
-              <input
-                type="number"
-                step="0.5"
-                min="0"
-                value={formData.estimated_hours}
-                onChange={(e) => setFormData({ ...formData, estimated_hours: e.target.value })}
-                className="w-full px-4 py-2.5 bg-[#222226] border border-white/10 rounded-xl text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-white/20 transition-colors"
-                placeholder="0"
-              />
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Due Date</label>
+                  <input
+                    type="date"
+                    value={formData.due_date}
+                    onChange={(e) => setFormData({ ...formData, due_date: e.target.value })}
+                    className="w-full px-4 py-3 bg-[#222226] border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-white/20 transition-colors"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Est. Hours</label>
+                  <input
+                    type="number"
+                    step="0.5"
+                    min="0"
+                    value={formData.estimated_hours}
+                    onChange={(e) => setFormData({ ...formData, estimated_hours: e.target.value })}
+                    className="w-full px-4 py-3 bg-[#222226] border border-white/10 rounded-xl text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-white/20 transition-colors"
+                    placeholder="0"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="flex justify-end gap-3 pt-6 mt-4 border-t border-white/5">
+        <div className="flex justify-end gap-3 pt-8 mt-8 border-t border-white/5">
           <button
             type="button"
             onClick={onClose}
-            className="px-5 py-2.5 text-sm font-medium text-gray-400 hover:text-white rounded-xl transition-colors"
+            className="px-6 py-3 text-sm font-medium text-gray-400 hover:text-white rounded-xl transition-colors"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={loading || uploadingImage}
-            className="px-5 py-2.5 bg-white text-gray-900 rounded-xl text-sm font-bold hover:scale-105 transition-transform disabled:opacity-50 shadow-[0_0_15px_rgba(255,255,255,0.15)]"
+            className="px-6 py-3 bg-white text-gray-900 rounded-xl text-sm font-bold hover:scale-105 transition-transform disabled:opacity-50 shadow-[0_0_15px_rgba(255,255,255,0.15)]"
           >
             {loading ? "Creating..." : "Create Task"}
           </button>

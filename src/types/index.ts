@@ -32,16 +32,6 @@ export interface Renewal {
   status: "safe" | "warning" | "critical" | "expired";
 }
 
-export interface TeamMember {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-  tags: string[];
-  workload: number;
-  activeProjects: number;
-}
-
 export interface Task {
   id: string;
   project_id: string | null;
