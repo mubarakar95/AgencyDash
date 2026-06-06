@@ -18,6 +18,7 @@ import {
   Timer,
   ImageIcon,
   User,
+  MessageSquare,
 } from "lucide-react";
 
 const typeFilterConfig: Record<string, { icon: React.ElementType; label: string; active: string }> = {
@@ -28,7 +29,7 @@ const typeFilterConfig: Record<string, { icon: React.ElementType; label: string;
 };
 
 export default function TasksPage() {
-  const { user, role } = useAuth();
+  const { user } = useAuth();
   const [tasks, setTasks] = useState<any[]>([]);
   const [projects, setProjects] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -42,6 +43,27 @@ export default function TasksPage() {
   const [filterType, setFilterType] = useState("");
   const [filterAssignee, setFilterAssignee] = useState("");
   const [viewMode, setViewMode] = useState<"kanban" | "list">("kanban");
+  const [commentData, setCommentData] = useState<Record<string, { count: number; hasUnread: boolean }>>({});
+
+  function fetchCommentData(taskIds: string[]) {
+    if (!user || taskIds.length === 0) return;
+    const ids = taskIds.join(",");
+
+    Promise.all([
+      fetch(`/api/task-comments?action=counts&task_ids=${ids}`).then((r) => r.json()),
+      fetch(`/api/task-comments?action=views&user_id=${user.id}`).then((r) => r.json()),
+    ])
+      .then(([counts, views]) => {
+        const merged: Record<string, { count: number; hasUnread: boolean }> = {};
+        for (const taskId of taskIds) {
+          const count = (counts as Record<string, number>)[taskId] || 0;
+          const hasUnread = count > 0 && !((views as Record<string, string>)[taskId]);
+          merged[taskId] = { count, hasUnread };
+        }
+        setCommentData(merged);
+      })
+      .catch(() => {});
+  }
 
   function fetchTasks() {
     setLoading(true);
@@ -53,8 +75,10 @@ export default function TasksPage() {
     fetch(`/api/tasks${qs ? `?${qs}` : ""}`)
       .then((res) => res.json())
       .then((data) => {
-        setTasks(Array.isArray(data) ? data : []);
+        const tasks = Array.isArray(data) ? data : [];
+        setTasks(tasks);
         setLoading(false);
+        fetchCommentData(tasks.map((t: any) => t.id));
       })
       .catch(() => setLoading(false));
   }
@@ -263,6 +287,7 @@ export default function TasksPage() {
               onDelete={setDeletingTask}
               onStatusChange={handleStatusChange}
               onTaskClick={setViewingTask}
+              commentData={commentData}
             />
           )}
         </div>
@@ -322,8 +347,14 @@ export default function TasksPage() {
                             <div className="min-w-0">
                               <div className="flex items-center gap-1.5">
                                 <p className="font-medium text-gray-900 truncate">{task.title}</p>
-                                {Array.isArray(task.image_urls) && task.image_urls.length > 0 && (
+                                 {Array.isArray(task.image_urls) && task.image_urls.length > 0 && (
                                   <ImageIcon className="w-3.5 h-3.5 text-gray-400 shrink-0" />
+                                )}
+                                {commentData[task.id]?.count > 0 && (
+                                  <div className={`flex items-center gap-1 px-1.5 py-0.5 rounded-full ${commentData[task.id]?.hasUnread ? "bg-blue-100 text-blue-600" : "bg-gray-100 text-gray-500"}`}>
+                                    <MessageSquare className="w-3 h-3" />
+                                    <span className="text-[10px] font-medium">{commentData[task.id].count}</span>
+                                  </div>
                                 )}
                               </div>
                               {task.description && (

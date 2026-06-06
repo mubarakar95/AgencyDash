@@ -161,6 +161,29 @@ export interface Database {
         Insert: Omit<Database['public']['Tables']['tasks']['Row'], 'id' | 'created_at' | 'updated_at'>;
         Update: Partial<Database['public']['Tables']['tasks']['Insert']>;
       };
+      task_comments: {
+        Row: {
+          id: string;
+          task_id: string;
+          author_id: string | null;
+          author_name: string;
+          content: string;
+          image_urls: string[];
+          created_at: string;
+        };
+        Insert: Omit<Database['public']['Tables']['task_comments']['Row'], 'id' | 'created_at'>;
+        Update: Partial<Database['public']['Tables']['task_comments']['Insert']>;
+      };
+      task_comment_views: {
+        Row: {
+          id: string;
+          task_id: string;
+          user_id: string;
+          last_viewed_at: string;
+        };
+        Insert: Omit<Database['public']['Tables']['task_comment_views']['Row'], 'id' | 'last_viewed_at'>;
+        Update: Partial<Database['public']['Tables']['task_comment_views']['Insert']>;
+      };
     };
   };
 }

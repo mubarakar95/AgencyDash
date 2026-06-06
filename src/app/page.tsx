@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { NotificationBell } from "@/components/layout/NotificationBell";
+import { ProfileMenu } from "@/components/layout/ProfileMenu";
 import {
   BarChart,
   Bar,
@@ -14,7 +15,6 @@ import {
   Legend,
 } from "recharts";
 import {
-  Search,
   ChevronRight,
   Flame,
   Sparkles,
@@ -159,9 +159,7 @@ export default function DashboardPage() {
             </div>
           )}
           <NotificationBell />
-          <button className="w-10 h-10 glass-panel rounded-full flex items-center justify-center text-gray-300 hover:text-white transition-colors border border-white/5">
-            <Search className="w-4 h-4" />
-          </button>
+          <ProfileMenu />
         </div>
       </header>
 
