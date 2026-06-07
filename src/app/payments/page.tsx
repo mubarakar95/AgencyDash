@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Banknote, Plus, Search, Download, ChevronRight, TrendingUp, Wallet, ArrowUpRight } from "lucide-react";
 
 interface Transaction {
@@ -68,6 +69,8 @@ export default function PaymentsPage() {
   });
 
   const totalOutstanding = clientBalances.reduce((sum, c) => sum + c.balance, 0);
+
+  const router = useRouter();
 
   if (loading) {
     return (
@@ -154,7 +157,11 @@ export default function PaymentsPage() {
                 </tr>
               ) : (
                 filtered.map((txn) => (
-                  <tr key={txn.id} className="border-b border-gray-100 last:border-0 hover:bg-gray-50/50 transition-colors">
+                  <tr
+                    key={txn.id}
+                    onClick={() => txn.type === "invoice" && txn.reference_id && router.push(`/invoices/${txn.reference_id}`)}
+                    className={`border-b border-gray-100 last:border-0 hover:bg-gray-50/50 transition-colors ${txn.type === "invoice" ? "cursor-pointer" : ""}`}
+                  >
                     <td className="py-3 pr-4 text-gray-400 text-xs">
                       {txn.date ? new Date(txn.date).toLocaleDateString() : "—"}
                     </td>

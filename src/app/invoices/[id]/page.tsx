@@ -127,6 +127,11 @@ export default function InvoiceDetailPage() {
                   height={44}
                   className="shrink-0"
                 />
+                <p className="text-xs font-medium text-gray-500 mt-1">{agency?.agency_name || "Agency Name"}</p>
+                {agency?.agency_address && <p className="text-xs text-gray-400">{agency.agency_address}</p>}
+                {(agency?.agency_email || agency?.agency_contact) && (
+                  <p className="text-xs text-gray-400">{agency.agency_email || agency.agency_contact}</p>
+                )}
               </div>
               <div className="text-right">
                 <h1 className="text-4xl font-bold text-gray-900 tracking-tight">INVOICE</h1>
