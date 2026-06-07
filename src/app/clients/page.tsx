@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { NewClientModal } from "@/components/modals/NewClientModal";
 import { EditClientModal } from "@/components/modals/EditClientModal";
+import { ViewClientModal } from "@/components/modals/ViewClientModal";
 import { DeleteConfirmDialog } from "@/components/ui/DeleteConfirmDialog";
 import {
   Users,
@@ -20,19 +21,35 @@ import {
 
 export default function ClientsPage() {
   const [clients, setClients] = useState<any[]>([]);
+  const [transactions, setTransactions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [viewingClient, setViewingClient] = useState<any>(null);
   const [editingClient, setEditingClient] = useState<any>(null);
   const [deletingClient, setDeletingClient] = useState<any>(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
+  function getBalance(clientId: string) {
+    const clientTxns = transactions.filter((t: any) => t.client_id === clientId);
+    const invoiced = clientTxns
+      .filter((t: any) => t.type === "invoice")
+      .reduce((sum: number, t: any) => sum + Number(t.amount), 0);
+    const paid = clientTxns
+      .filter((t: any) => t.type === "payment")
+      .reduce((sum: number, t: any) => sum + Number(t.amount), 0);
+    return invoiced - paid;
+  }
+
   function fetchClients() {
     setLoading(true);
-    fetch("/api/clients")
-      .then((res) => res.json())
-      .then((data) => {
-        setClients(data || []);
+    Promise.all([
+      fetch("/api/clients").then((r) => r.json()),
+      fetch("/api/transactions").then((r) => r.json()),
+    ])
+      .then(([clientsData, txnsData]) => {
+        setClients(clientsData || []);
+        setTransactions(Array.isArray(txnsData) ? txnsData : []);
         setLoading(false);
       })
       .catch((err) => {
@@ -186,6 +203,7 @@ export default function ClientsPage() {
                   <th className="pb-4 font-normal w-[14%]">Status</th>
                   <th className="pb-4 font-normal w-[22%]">Contact</th>
                   <th className="pb-4 font-normal w-[10%]">Projects</th>
+                  <th className="pb-4 font-normal w-[12%]">Balance</th>
                   <th className="pb-4 font-normal w-[10%]">Last Contact</th>
                   <th className="pb-4 font-normal w-[6%] text-right">Actions</th>
                 </tr>
@@ -193,11 +211,11 @@ export default function ClientsPage() {
               <tbody className="text-sm">
                 {filtered.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="py-12 text-center text-gray-400">No clients found</td>
+                    <td colSpan={7} className="py-12 text-center text-gray-400">No clients found</td>
                   </tr>
                 ) : (
                   filtered.map((client) => (
-                    <tr key={client.id} className="border-b border-gray-100 last:border-0 hover:bg-gray-50/50 transition-colors group">
+                    <tr key={client.id} className="border-b border-gray-100 last:border-0 hover:bg-gray-50/50 transition-colors group cursor-pointer" onClick={() => setViewingClient(client)}>
                       <td className="py-4">
                         <div className="flex items-center gap-3">
                           <div className="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white text-xs font-bold shrink-0">
@@ -232,6 +250,15 @@ export default function ClientsPage() {
                         )}
                       </td>
                       <td className="py-4 text-gray-500">{client.projects_count || 0}</td>
+                      <td className="py-4">
+                        <span className={`text-xs font-medium ${
+                          getBalance(client.id) > 0
+                            ? "text-red-500"
+                            : "text-gray-400"
+                        }`}>
+                          ₹{getBalance(client.id).toFixed(2)}
+                        </span>
+                      </td>
                       <td className="py-4 text-gray-400 text-xs">{client.last_contact ? new Date(client.last_contact).toLocaleDateString() : "—"}</td>
                       <td className="py-4 text-right">
                         <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -323,6 +350,14 @@ export default function ClientsPage() {
         onClose={() => setIsModalOpen(false)}
         onSuccess={fetchClients}
       />
+
+      {viewingClient && (
+        <ViewClientModal
+          isOpen={!!viewingClient}
+          onClose={() => setViewingClient(null)}
+          client={viewingClient}
+        />
+      )}
 
       {editingClient && (
         <EditClientModal

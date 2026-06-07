@@ -25,7 +25,7 @@ export function Modal({ isOpen, onClose, title, maxWidth = "max-w-lg", children 
             <X className="w-5 h-5 text-gray-400" />
           </button>
         </div>
-        <div className="p-6 overflow-y-auto">{children}</div>
+        <div className="p-6 overflow-y-auto overflow-x-hidden">{children}</div>
       </div>
     </div>
   );

@@ -210,8 +210,8 @@ export default function ProjectDetailPage() {
             <DollarSign className="w-4 h-4 text-blue-400" />
             <span className="text-sm text-gray-400">Budget</span>
           </div>
-          <p className="text-2xl font-bold text-white">${((project.budget || 0) / 1000).toFixed(1)}k</p>
-          <p className="text-xs text-gray-500 mt-1">${((project.spent || 0) / 1000).toFixed(1)}k spent</p>
+          <p className="text-2xl font-bold text-white">₹{((project.budget || 0) / 1000).toFixed(1)}k</p>
+          <p className="text-xs text-gray-500 mt-1">₹{((project.spent || 0) / 1000).toFixed(1)}k spent</p>
         </div>
         <div className="glass-panel rounded-2xl p-4 border border-white/5">
           <div className="flex items-center gap-2 mb-2">

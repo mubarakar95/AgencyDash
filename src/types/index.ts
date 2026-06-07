@@ -50,6 +50,21 @@ export interface Task {
   updated_at: string;
 }
 
+export interface Transaction {
+  id: string;
+  client_id: string;
+  type: "payment" | "invoice";
+  amount: number;
+  currency: string;
+  original_amount: number | null;
+  description: string | null;
+  payment_method: string | null;
+  reference_id: string | null;
+  date: string;
+  created_at: string;
+  clients?: { name: string; company: string | null };
+}
+
 export interface TaskComment {
   id: string;
   task_id: string;

@@ -15,6 +15,7 @@ export function NewClientModal({ isOpen, onClose, onSuccess }: NewClientModalPro
     email: "",
     phone: "",
     company: "",
+    address: "",
     status: "lead",
   });
   const [selectedUserId, setSelectedUserId] = useState("");
@@ -77,7 +78,7 @@ export function NewClientModal({ isOpen, onClose, onSuccess }: NewClientModalPro
         });
       }
 
-      setFormData({ name: "", email: "", phone: "", company: "", status: "lead" });
+      setFormData({ name: "", email: "", phone: "", company: "", address: "", status: "lead" });
       setSelectedUserId("");
       setSelectedProjects([]);
       setSelectedRenewals([]);
@@ -167,6 +168,16 @@ export function NewClientModal({ isOpen, onClose, onSuccess }: NewClientModalPro
                   placeholder="Acme Corp"
                 />
               </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-1">Address</label>
+              <textarea
+                rows={2}
+                value={formData.address}
+                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                className="w-full px-4 py-2.5 bg-[#222226] border border-white/10 rounded-xl text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-white/20 transition-colors resize-y min-h-[60px]"
+                placeholder="Street, City, State, ZIP"
+              />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">Status</label>

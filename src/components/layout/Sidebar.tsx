@@ -17,12 +17,14 @@ import {
   Ticket,
   ClipboardList,
   Lock,
+  Banknote,
 } from "lucide-react";
 
 const navItems = [
   { name: "Dashboard", href: "/", icon: Home },
   { name: "Projects", href: "/projects", icon: FolderOpen },
   { name: "Clients", href: "/clients", icon: Users },
+  { name: "Payments", href: "/payments", icon: Banknote },
   { name: "Renewals", href: "/renewals", icon: Clock },
   { name: "Follow-ups", href: "/follow-ups", icon: CalendarDays },
   { name: "Tickets", href: "/tickets", icon: Ticket },
@@ -45,7 +47,7 @@ export function Sidebar() {
   const isHome = pathname === "/";
 
   return (
-    <aside className="w-20 flex flex-col items-center pt-3 pb-6 justify-between h-screen shrink-0">
+    <aside className="w-20 flex flex-col items-center pt-3 pb-6 justify-between h-screen shrink-0 print:hidden">
       <nav className="flex flex-col gap-4 flex-1">
         {navItems.map((item) => {
           const isActive = pathname === item.href;

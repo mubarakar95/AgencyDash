@@ -199,7 +199,7 @@ export default function DashboardPage() {
                 <span className="font-semibold text-white">Budget</span>
                 <DollarSign className="w-4 h-4 text-purple-400" />
               </div>
-              <p className="text-xs text-gray-400 mt-1">${(stats.totalBudget / 1000).toFixed(1)}k total</p>
+              <p className="text-xs text-gray-400 mt-1">₹{(stats.totalBudget / 1000).toFixed(1)}k total</p>
             </div>
           </div>
         </div>
@@ -345,7 +345,7 @@ export default function DashboardPage() {
                             <span className="text-xs text-gray-500">{project.progress || 0}%</span>
                           </div>
                         </td>
-                        <td className="py-4 font-medium text-gray-900">${(project.budget || 0).toLocaleString()}</td>
+                        <td className="py-4 font-medium text-gray-900">₹{(project.budget || 0).toLocaleString()}</td>
                       </tr>
                     );
                   })}
@@ -364,7 +364,7 @@ export default function DashboardPage() {
               <h3 className="text-2xl font-medium text-gray-900 flex items-center gap-2">
                 <TrendingUp className="w-5 h-5" /> Budget by Status
               </h3>
-              <p className="text-gray-800/80 text-sm mt-2">${(stats.totalBudget / 1000).toFixed(1)}k total value</p>
+              <p className="text-gray-800/80 text-sm mt-2">₹{(stats.totalBudget / 1000).toFixed(1)}k total value</p>
             </div>
           </div>
           <div className="relative z-10 flex-1 flex flex-col justify-center gap-3">
@@ -376,7 +376,7 @@ export default function DashboardPage() {
                   <div className="flex-1 h-3 bg-white/30 rounded-full overflow-hidden">
                     <div className="h-full rounded-full bg-gray-900" style={{ width: `${(item.budget / maxBudget) * 100}%` }} />
                   </div>
-                  <div className="w-16 text-right text-sm font-bold text-gray-900">${(item.budget / 1000).toFixed(0)}k</div>
+                  <div className="w-16 text-right text-sm font-bold text-gray-900">₹{(item.budget / 1000).toFixed(0)}k</div>
                 </div>
               );
             }) : (

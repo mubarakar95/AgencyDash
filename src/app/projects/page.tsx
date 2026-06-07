@@ -245,7 +245,7 @@ export default function ProjectsPage() {
                           <span className="text-xs font-medium text-gray-500">{project.progress || 0}%</span>
                         </div>
                       </td>
-                      <td className="py-5 font-medium text-gray-900">${(project.budget || 0).toLocaleString()}</td>
+                      <td className="py-5 font-medium text-gray-900">₹{(project.budget || 0).toLocaleString()}</td>
                       <td className="py-5 text-gray-600">{project.deadline || "—"}</td>
                       <td className="py-5">
                         <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -317,7 +317,7 @@ export default function ProjectsPage() {
                 <DollarSign className="w-4 h-4 text-blue-400" />
                 <span className="text-sm text-gray-400">Budget</span>
               </div>
-              <p className="text-2xl font-bold text-white">${(totalBudget / 1000).toFixed(1)}k</p>
+              <p className="text-2xl font-bold text-white">₹{(totalBudget / 1000).toFixed(1)}k</p>
               <p className="text-xs text-gray-500 mt-1">total value</p>
             </div>
             <div className="glass-panel rounded-2xl p-5 border border-white/5">
@@ -380,7 +380,7 @@ export default function ProjectsPage() {
               <h3 className="text-2xl font-medium text-gray-900 flex items-center gap-2">
                 <TrendingUp className="w-5 h-5" /> Budget Overview
               </h3>
-              <p className="text-gray-800/80 text-sm mt-2">${(totalBudget / 1000).toFixed(1)}k total across all projects</p>
+              <p className="text-gray-800/80 text-sm mt-2">₹{(totalBudget / 1000).toFixed(1)}k total across all projects</p>
             </div>
             <div className="flex items-center gap-2 px-3 py-1.5 bg-white/30 backdrop-blur-sm rounded-full">
               <DollarSign className="w-4 h-4 text-gray-900" />
@@ -396,7 +396,7 @@ export default function ProjectsPage() {
                   <div className="flex-1 h-3 bg-white/30 rounded-full overflow-hidden">
                     <div className="h-full rounded-full bg-gray-900" style={{ width: `${((p.budget || 0) / maxBudget) * 100}%` }} />
                   </div>
-                  <div className="w-16 text-right text-sm font-bold text-gray-900">${((p.budget || 0) / 1000).toFixed(0)}k</div>
+                  <div className="w-16 text-right text-sm font-bold text-gray-900">₹{((p.budget || 0) / 1000).toFixed(0)}k</div>
                 </div>
               );
             })}

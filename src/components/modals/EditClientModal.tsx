@@ -398,7 +398,7 @@ export function EditClientModal({ isOpen, onClose, onSuccess, client }: EditClie
                               />
                               <div className="flex-1 min-w-0">
                                 <p className="text-sm text-white truncate">{renewal.asset_name}</p>
-                                <p className="text-xs text-gray-500">{renewal.type} · ${renewal.cost || 0}</p>
+                                <p className="text-xs text-gray-500">{renewal.type} · ₹{renewal.cost || 0}</p>
                               </div>
                               <span className="text-sm shrink-0">{renewalTypeIcon[renewal.type] || "📄"}</span>
                             </label>
@@ -447,7 +447,7 @@ export function EditClientModal({ isOpen, onClose, onSuccess, client }: EditClie
                                 <p className="text-xs text-gray-500">{inv.projects?.name || "No project"}</p>
                               </div>
                               <div className="text-right shrink-0">
-                                <p className="text-sm font-medium text-white">${Number(inv.amount || 0).toFixed(2)}</p>
+                                <p className="text-sm font-medium text-white">₹{Number(inv.amount || 0).toFixed(2)}</p>
                                 <p className={`text-xs ${statusColors[inv.status] || "text-gray-500"}`}>
                                   {inv.status?.charAt(0).toUpperCase() + inv.status?.slice(1)}
                                 </p>

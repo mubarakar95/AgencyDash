@@ -17,6 +17,7 @@ create table if not exists clients (
   email text not null unique,
   phone text,
   company text,
+  address text,
   status text not null default 'lead' check (status in ('active', 'lead', 'inactive')),
   last_contact date,
   notes text,
