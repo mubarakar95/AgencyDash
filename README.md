@@ -1,130 +1,103 @@
-# AgencyDash — Software Agency Management Dashboard
+# AgencyDash — Full-Stack Agency Management Dashboard & Client Portal
 
-A modern, full-stack dashboard for managing software agency projects, clients, renewals, team, and automated follow-ups.
+A modern, open-source agency operating system built with Next.js 16, React 19, Tailwind CSS, and Supabase. Manage projects, tasks, client relationships, multi-currency invoices, recurring asset renewals, team workloads, and dedicated client portals from a single unified workspace.
 
-## Features
+---
 
-- **Project Management**: Track projects from lead to delivery with progress bars, deadlines, and budgets.
-- **Client CRM**: Manage client profiles, communication history, and project associations.
-- **Renewal Tracker**: Monitor domain, hosting, SSL, and license expirations with color-coded alerts.
-- **Follow-up Automation**: Schedule and manage client outreach with status tracking.
-- **Team Management**: Tag developers by skill, monitor workload, and assign projects.
-- **Settings**: Notification preferences, timezone, and agency branding.
+## Highlights & Capabilities
+
+* **Interactive Project & Task Management**: Drag-and-drop Kanban workflow powered by `@dnd-kit`, task discussions, file attachments, and completion milestones.
+* **Client CRM & Directory**: Centralized client profiles, project histories, contact schedules, and associated billing records.
+* **Invoicing & Payments**: Built-in invoice generator supporting multi-currency billing (INR/USD), line items, automated total conversion, discounts, and print/PDF views.
+* **Recurring Renewal Tracker**: Monitor domain registrations, hosting accounts, SSL certificates, and software licenses with warning indicators.
+* **Dedicated Client Portal**: Secure, authenticated interface allowing clients to view ongoing projects, open tickets, track renewals, and view invoices.
+* **Support Ticket Desk**: Interactive issue tracking with comments, link sharing, and status updates between agency staff and clients.
+* **Team Capacity & Skills**: Monitor developer workload, active project loads, and skill assignments.
+* **White-Label Agency Settings**: Customize your agency business name, address, payment details, tax IDs, and logo directly through the settings interface.
+
+---
 
 ## Tech Stack
 
-- **Frontend**: Next.js 16, React 19, TypeScript, Tailwind CSS
-- **Backend**: Next.js API Routes
-- **Database**: Supabase (PostgreSQL)
-- **Icons**: Lucide React
+| Layer | Technologies |
+| :--- | :--- |
+| **Framework** | Next.js 16 (App Router), React 19, TypeScript |
+| **Styling & UI** | Tailwind CSS v4, Lucide React icons |
+| **State & Interactions** | `@dnd-kit/core`, `@dnd-kit/sortable`, Recharts |
+| **Backend & Database** | Supabase (PostgreSQL, Row Level Security, Auth, Storage) |
 
-## Getting Started
+---
 
-### 1. Clone & Install
+## Quickstart Guide
+
+### 1. Clone & Install Dependencies
 
 ```bash
-cd agency-dash
+git clone https://github.com/mubarakar95/AgencyDash.git
+cd AgencyDash
 npm install
 ```
 
-### 2. Supabase Setup
+### 2. Configure Supabase
 
-1. Create a new project at [supabase.com](https://supabase.com)
-2. Go to **SQL Editor** → **New Query**
-3. Copy and paste the contents of `supabase/schema.sql`
-4. Click **Run**
+1. Create a free project at [supabase.com](https://supabase.com).
+2. Open the **SQL Editor** in your Supabase Dashboard.
+3. Run the base schema from `supabase/schema.sql`.
+4. Apply the feature migrations in order from the `supabase/` directory (or the specific tables you require).
 
-### 3. Environment Variables
+### 3. Set Up Environment Variables
 
-Copy `.env.local.example` to `.env.local` and fill in your Supabase credentials:
+Copy `.env.example` to `.env.local`:
+
+```bash
+cp .env.example .env.local
+```
+
+Fill in your project credentials from your Supabase Dashboard (**Project Settings** → **API**):
 
 ```env
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-public-key
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+NEXT_PUBLIC_APP_URL=http://localhost:3001
 ```
 
-Find these in your Supabase project settings under **API**.
-
-### 4. Run Dev Server
+### 4. Run the Development Server
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3001](http://localhost:3001)
+Navigate to [http://localhost:3001](http://localhost:3001) in your browser.
 
-### 5. Seed Data (Optional)
+---
 
-You can insert sample data directly from the Supabase Table Editor, or build forms in the UI.
+## Project Structure
 
-## Database Schema
+```
+├── src/
+│   ├── app/
+│   │   ├── admin/users/        # Team and user role management
+│   │   ├── calendar/           # Milestone and renewal calendar
+│   │   ├── clients/            # Client CRM and directory
+│   │   ├── invoices/           # Invoicing and printable bill templates
+│   │   ├── payments/           # Financial transactions and receipts
+│   │   ├── portal/             # Client-facing portal views
+│   │   ├── projects/           # Project boards and detail views
+│   │   ├── renewals/           # Domain, hosting, and SSL expiration alerts
+│   │   ├── settings/           # Agency branding, tax info, and preferences
+│   │   ├── tasks/              # Kanban task board
+│   │   ├── team/               # Team member roster and workload
+│   │   ├── tickets/            # Support ticket system
+│   │   └── time-tracking/      # Work log and time entry
+│   ├── components/             # Reusable UI cards, modals, and navigation
+│   ├── contexts/               # Supabase authentication provider
+│   └── lib/                    # Supabase browser, server, and admin clients
+└── supabase/                   # PostgreSQL table schemas and migrations
+```
 
-### Projects
-| Column | Type | Notes |
-|--------|------|-------|
-| id | uuid | PK |
-| name | text | Required |
-| client_id | uuid | FK → clients |
-| status | text | lead/quoted/active/in-progress/review/delivered/maintenance |
-| deadline | date | |
-| progress | integer | 0-100 |
-| budget | decimal | |
-| spent | decimal | |
-
-### Clients
-| Column | Type | Notes |
-|--------|------|-------|
-| id | uuid | PK |
-| name | text | Required |
-| email | text | Unique |
-| phone | text | |
-| company | text | |
-| status | text | active/lead/inactive |
-| last_contact | date | |
-
-### Renewals
-| Column | Type | Notes |
-|--------|------|-------|
-| id | uuid | PK |
-| asset_name | text | Required |
-| type | text | domain/hosting/ssl/license |
-| client_id | uuid | FK → clients |
-| expiry_date | date | Required |
-| cost | decimal | |
-| provider | text | |
-| status | text | safe/warning/critical/expired |
-| auto_renew | boolean | |
-
-### Team Members
-| Column | Type | Notes |
-|--------|------|-------|
-| id | uuid | PK |
-| name | text | Required |
-| email | text | Unique |
-| role | text | |
-| tags | text[] | Skills array |
-| workload | integer | 0-100 |
-| active_projects | integer | |
-
-### Follow-ups
-| Column | Type | Notes |
-|--------|------|-------|
-| id | uuid | PK |
-| client_id | uuid | FK → clients |
-| type | text | proposal/project_checkin/renewal_notice/invoice_reminder/custom |
-| scheduled_date | date | Required |
-| status | text | pending/sent/completed/snoozed |
-| message | text | |
-| sequence_step | integer | |
-
-## Roadmap
-
-- [x] Phase 1: MVP with mock data
-- [x] Phase 2: Supabase backend, Follow-ups, real data
-- [ ] Phase 3: Client Portal, Time Tracking, Invoicing
-- [ ] Phase 4: Email notifications, Calendar sync, Analytics
+---
 
 ## License
 
-MIT
+This project is licensed under the MIT License.
