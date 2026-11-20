@@ -26,9 +26,8 @@ export function NewInvoiceModal({ isOpen, onClose, onSuccess, preselectedClientI
   const [projects, setProjects] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [showBalanceSection, setShowBalanceSection] = useState(false);
+  const [showDiscount, setShowDiscount] = useState(false);
   const [clientBalance, setClientBalance] = useState(0);
-  const [redeemedAmount, setRedeemedAmount] = useState(0);
   const [discount, setDiscount] = useState(0);
 
   const currencySymbol = currency === "INR" ? "₹" : "$";
@@ -43,9 +42,8 @@ export function NewInvoiceModal({ isOpen, onClose, onSuccess, preselectedClientI
       if (preselectedClientId) setClientId(preselectedClientId);
     } else {
       setClientBalance(0);
-      setRedeemedAmount(0);
       setDiscount(0);
-      setShowBalanceSection(false);
+      setShowDiscount(false);
     }
   }, [isOpen, preselectedClientId]);
 
@@ -61,9 +59,6 @@ export function NewInvoiceModal({ isOpen, onClose, onSuccess, preselectedClientI
   useEffect(() => {
     if (!clientId) {
       setClientBalance(0);
-      setRedeemedAmount(0);
-      setDiscount(0);
-      setShowBalanceSection(false);
       return;
     }
     fetch(`/api/transactions?client_id=${clientId}`)
@@ -72,18 +67,13 @@ export function NewInvoiceModal({ isOpen, onClose, onSuccess, preselectedClientI
         if (!Array.isArray(txns)) return;
         const invoiced = txns.filter((t: any) => t.type === "invoice").reduce((s: number, t: any) => s + Number(t.amount), 0);
         const paid = txns.filter((t: any) => t.type === "payment").reduce((s: number, t: any) => s + Number(t.amount), 0);
-        const balance = invoiced - paid;
-        setClientBalance(balance);
-        if (balance > 0) {
-          setRedeemedAmount(balance);
-          setShowBalanceSection(true);
-        }
+        setClientBalance(invoiced - paid);
       })
       .catch(() => {});
   }, [clientId]);
 
   const total = lineItems.reduce((sum, item) => sum + item.amount, 0);
-  const netTotal = total - redeemedAmount - discount;
+  const netTotal = Math.max(total - discount, 0);
 
   function updateLineItem(index: number, field: string, value: any) {
     setLineItems((prev) =>
@@ -120,8 +110,8 @@ export function NewInvoiceModal({ isOpen, onClose, onSuccess, preselectedClientI
         line_items: lineItems.filter((item) => item.description.trim()),
         notes: notes || null,
         currency,
-        discount: showBalanceSection ? discount : 0,
-        redeemed_amount: showBalanceSection ? redeemedAmount : 0,
+        discount: Number(discount) || 0,
+        redeemed_amount: 0,
       };
       if (currency === "USD") body.exchange_rate = parseFloat(exchangeRate) || 83;
       if (projectId) body.project_id = projectId;
@@ -323,78 +313,45 @@ export function NewInvoiceModal({ isOpen, onClose, onSuccess, preselectedClientI
               </div>
             </div>
 
+            {clientBalance > 0 && (
+              <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl text-amber-300 text-xs flex items-center justify-between">
+                <span>Client has previous unpaid balance:</span>
+                <span className="font-semibold">{currencySymbol}{clientBalance.toFixed(2)}</span>
+              </div>
+            )}
+
             <div className="bg-[#1a1a1e] rounded-xl p-4 border border-white/5 space-y-2">
               <div className="flex justify-between items-center text-sm">
                 <span className="text-gray-400">Subtotal</span>
-                <span className="text-gray-300">{currencySymbol}{total.toFixed(2)}</span>
+                <span className="text-gray-300 font-medium">{currencySymbol}{total.toFixed(2)}</span>
               </div>
-              {showBalanceSection && (
-                <>
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-gray-400">Redeemed</span>
-                    <span className="text-green-400">-{currencySymbol}{redeemedAmount.toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-gray-400">Discount</span>
-                    <span className="text-green-400">-{currencySymbol}{discount.toFixed(2)}</span>
-                  </div>
-                </>
+              {discount > 0 && (
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-gray-400">Discount</span>
+                  <span className="text-emerald-400 font-medium">-{currencySymbol}{Number(discount).toFixed(2)}</span>
+                </div>
               )}
               <div className="border-t border-white/5 pt-2 flex justify-between items-center">
-                <span className="text-sm font-medium text-gray-200">Total ({currency})</span>
-                <span className="text-xl font-bold text-white">{currencySymbol}{Math.max(netTotal, 0).toFixed(2)}</span>
+                <span className="text-sm font-medium text-gray-200">Total Payable ({currency})</span>
+                <span className="text-xl font-bold text-white">{currencySymbol}{netTotal.toFixed(2)}</span>
               </div>
             </div>
 
-            <div className="bg-[#1a1a1e] rounded-xl border border-white/5 overflow-hidden">
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (showBalanceSection) {
-                      setRedeemedAmount(0);
-                      setDiscount(0);
-                    } else if (clientBalance > 0) {
-                      setRedeemedAmount(clientBalance);
-                    }
-                    setShowBalanceSection(!showBalanceSection);
-                  }}
-                  className="w-full flex items-center justify-between px-4 py-3 text-sm text-gray-300 hover:text-white transition-colors"
-                >
-                  <span>Apply balance / discount</span>
-                  <span className={`text-xs transition-transform ${showBalanceSection ? "rotate-180" : ""}`}>▼</span>
-                </button>
-                {showBalanceSection && (
-                  <div className="px-4 pb-4 space-y-3">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-400">Previous balance</span>
-                      <span className="text-gray-200">{currencySymbol}{clientBalance.toFixed(2)}</span>
-                    </div>
-                    <div>
-                      <label className="block text-xs text-gray-400 mb-1">Amount to redeem</label>
-                      <input
-                        type="number"
-                        min="0"
-                        max={Math.max(clientBalance, 0)}
-                        step="0.01"
-                        value={redeemedAmount}
-                        onChange={(e) => setRedeemedAmount(Math.min(Number(e.target.value), Math.max(clientBalance, 0)))}
-                        className="w-full px-3 py-2 bg-[#222226] border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-white/20 transition-colors"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs text-gray-400 mb-1">Discount</label>
-                      <input
-                        type="number"
-                        min="0"
-                        step="0.01"
-                        value={discount}
-                        onChange={(e) => setDiscount(Math.max(0, Number(e.target.value)))}
-                        className="w-full px-3 py-2 bg-[#222226] border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-white/20 transition-colors"
-                      />
-                    </div>
-                  </div>
-                )}
+            <div className="bg-[#1a1a1e] rounded-xl border border-white/5 p-4 space-y-2">
+              <div className="flex items-center justify-between">
+                <label className="text-xs text-gray-400 font-medium">Discount / Adjustment ({currencySymbol})</label>
+                <span className="text-[11px] text-gray-500">Optional</span>
               </div>
+              <input
+                type="number"
+                min="0"
+                step="0.01"
+                placeholder="0.00"
+                value={discount || ""}
+                onChange={(e) => setDiscount(Math.max(0, Number(e.target.value)))}
+                className="w-full px-3 py-2 bg-[#222226] border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-white/20 transition-colors"
+              />
+            </div>
           </div>
         </div>
 
