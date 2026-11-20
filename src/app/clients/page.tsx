@@ -101,7 +101,7 @@ export default function ClientsPage() {
   }
 
   return (
-    <div className="flex-1 flex flex-col min-h-0 overflow-y-auto pr-2 pb-6">
+    <div className="w-full flex flex-col min-h-full pr-2 pb-12">
       {/* Header matching dashboard */}
       <header className="flex justify-between items-center py-4 px-2 mb-6">
         <div className="flex items-center gap-3">
@@ -200,10 +200,10 @@ export default function ClientsPage() {
             </div>
           </div>
 
-          <div className="overflow-x-auto overflow-y-auto max-h-[620px] scrollbar-thin border-t border-white/5 overscroll-x-contain">
+          <div className="overflow-x-auto w-full border-t border-white/5 overscroll-x-contain">
             <table className="w-full text-left border-collapse min-w-[850px]">
-              <thead className="sticky top-0 bg-[#1e1e23] z-10 shadow-sm">
-                <tr className="text-xs text-gray-400 border-b border-white/5">
+              <thead>
+                <tr className="text-xs text-gray-400 border-b border-white/5 bg-[#222226]/40">
                   <th className="py-3.5 px-6 font-medium">Client / Company</th>
                   <th className="py-3.5 px-6 font-medium">Status</th>
                   <th className="py-3.5 px-6 font-medium">Contact</th>

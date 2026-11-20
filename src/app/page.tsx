@@ -109,7 +109,7 @@ export default function DashboardPage() {
   );
 
   return (
-    <div className="flex-1 flex flex-col min-h-0 overflow-y-auto pr-2 pb-8">
+    <div className="w-full flex flex-col min-h-full pr-2 pb-16">
       {/* Header */}
       <header className="flex justify-between items-center py-4 px-2 mb-6 shrink-0">
         <div className="flex items-center gap-3">
@@ -249,7 +249,7 @@ export default function DashboardPage() {
                 No active projects right now.
               </div>
             ) : (
-              <div className="space-y-3 max-h-[460px] overflow-y-auto scrollbar-thin pr-1">
+              <div className="space-y-3">
                 {activeProjectsList.slice(0, 6).map((project) => (
                   <div
                     key={project.id}
@@ -328,7 +328,7 @@ export default function DashboardPage() {
                 <p className="text-xs text-gray-500 mt-0.5">No pending payments due from clients.</p>
               </div>
             ) : (
-              <div className="space-y-3 max-h-[460px] overflow-y-auto scrollbar-thin pr-1">
+              <div className="space-y-3">
                 {clientsWithDues.slice(0, 5).map((client) => (
                   <div
                     key={client.id}

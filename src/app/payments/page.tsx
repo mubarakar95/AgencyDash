@@ -81,7 +81,7 @@ export default function PaymentsPage() {
   }
 
   return (
-    <div className="flex-1 flex flex-col min-h-0 overflow-y-auto pr-2 pb-6">
+    <div className="w-full flex flex-col min-h-full pr-2 pb-16">
       <header className="flex justify-between items-center py-4 px-2 mb-6">
         <div className="flex items-center gap-3">
           <Banknote className="w-6 h-6 text-green-300 drop-shadow-[0_0_8px_rgba(134,239,172,0.6)]" />
@@ -138,16 +138,16 @@ export default function PaymentsPage() {
             </div>
           </div>
 
-          <div className="overflow-x-auto overflow-y-auto max-h-[480px] scrollbar-light overscroll-x-contain">
+          <div className="overflow-x-auto w-full overscroll-x-contain">
           <table className="w-full text-left border-collapse min-w-[750px]">
-            <thead className="sticky top-0 bg-white z-10 shadow-xs">
+            <thead>
               <tr className="text-xs text-gray-500 border-b border-gray-100">
-                <th className="pb-3 pt-1 font-normal pr-4 bg-white">Date</th>
-                <th className="pb-3 pt-1 font-normal pr-4 bg-white">Client</th>
-                <th className="pb-3 pt-1 font-normal pr-4 bg-white">Type</th>
-                <th className="pb-3 pt-1 font-normal pr-4 bg-white">Description</th>
-                <th className="pb-3 pt-1 font-normal pr-4 bg-white">Method</th>
-                <th className="pb-3 pt-1 font-normal pr-4 text-right bg-white">Amount</th>
+                <th className="pb-3 pt-1 font-normal pr-4">Date</th>
+                <th className="pb-3 pt-1 font-normal pr-4">Client</th>
+                <th className="pb-3 pt-1 font-normal pr-4">Type</th>
+                <th className="pb-3 pt-1 font-normal pr-4">Description</th>
+                <th className="pb-3 pt-1 font-normal pr-4">Method</th>
+                <th className="pb-3 pt-1 font-normal pr-4 text-right">Amount</th>
               </tr>
             </thead>
             <tbody className="text-sm">
@@ -200,14 +200,14 @@ export default function PaymentsPage() {
       <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden mt-6">
         <div className="px-8 pt-6 pb-6">
           <h3 className="text-sm font-medium text-gray-900 mb-4">Client Balances</h3>
-          <div className="overflow-x-auto overflow-y-auto max-h-[420px] scrollbar-light overscroll-x-contain">
+          <div className="overflow-x-auto w-full overscroll-x-contain">
             <table className="w-full text-left border-collapse min-w-[650px]">
-              <thead className="sticky top-0 bg-white z-10 shadow-xs">
+              <thead>
                 <tr className="text-xs text-gray-500 border-b border-gray-100">
-                  <th className="pb-3 pt-1 font-normal pr-4 bg-white">Client</th>
-                  <th className="pb-3 pt-1 font-normal pr-4 text-right bg-white">Invoiced</th>
-                  <th className="pb-3 pt-1 font-normal pr-4 text-right bg-white">Paid</th>
-                  <th className="pb-3 pt-1 font-normal text-right bg-white">Balance</th>
+                  <th className="pb-3 pt-1 font-normal pr-4">Client</th>
+                  <th className="pb-3 pt-1 font-normal pr-4 text-right">Invoiced</th>
+                  <th className="pb-3 pt-1 font-normal pr-4 text-right">Paid</th>
+                  <th className="pb-3 pt-1 font-normal text-right">Balance</th>
                 </tr>
               </thead>
               <tbody className="text-sm">

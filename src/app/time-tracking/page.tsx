@@ -94,7 +94,7 @@ export default function TimeTrackingPage() {
   const displayEntries = searchQuery ? filtered : timeEntries;
 
   return (
-    <div className="flex-1 flex flex-col min-h-0 overflow-y-auto pr-2 pb-6">
+    <div className="w-full flex flex-col min-h-full pr-2 pb-16">
       <header className="flex justify-between items-center py-4 px-2 mb-6">
         <div className="flex items-center gap-3">
           <Clock className="w-6 h-6 text-blue-300 drop-shadow-[0_0_8px_rgba(147,197,253,0.6)]" />
@@ -261,16 +261,16 @@ export default function TimeTrackingPage() {
             <p className="text-sm text-gray-400 mt-1">Log your first entry to start tracking time.</p>
           </div>
         ) : (
-          <div className="flex-1 overflow-x-auto overflow-y-auto max-h-[560px] scrollbar-light overscroll-x-contain">
+          <div className="overflow-x-auto w-full overscroll-x-contain">
             <table className="w-full text-left border-collapse min-w-[750px]">
-              <thead className="sticky top-0 bg-white z-10 shadow-xs">
+              <thead>
                 <tr className="text-xs text-gray-500 border-b border-gray-100">
-                  <th className="pb-4 pt-1 font-normal bg-white">Date</th>
-                  <th className="pb-4 pt-1 font-normal bg-white">Project</th>
-                  <th className="pb-4 pt-1 font-normal bg-white">Member</th>
-                  <th className="pb-4 pt-1 font-normal bg-white">Description</th>
-                  <th className="pb-4 pt-1 font-normal bg-white">Hours</th>
-                  <th className="pb-4 pt-1 font-normal bg-white">Status</th>
+                  <th className="pb-4 font-normal">Date</th>
+                  <th className="pb-4 font-normal">Project</th>
+                  <th className="pb-4 font-normal">Member</th>
+                  <th className="pb-4 font-normal">Description</th>
+                  <th className="pb-4 font-normal">Hours</th>
+                  <th className="pb-4 font-normal">Status</th>
                 </tr>
               </thead>
               <tbody className="text-sm">

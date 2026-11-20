@@ -52,7 +52,7 @@ export default function PortalRenewalsPage() {
   }
 
   return (
-    <div className="flex-1 flex flex-col min-h-0 overflow-y-auto pr-2 pb-6">
+    <div className="w-full flex flex-col min-h-full pr-2 pb-16">
       <header className="flex justify-between items-center py-4 px-2 mb-6">
         <div className="flex items-center gap-3">
           <Globe className="w-6 h-6 text-blue-300 drop-shadow-[0_0_8px_rgba(147,197,253,0.6)]" />
@@ -82,17 +82,17 @@ export default function PortalRenewalsPage() {
             <p className="text-lg font-medium text-gray-500">No renewals to display</p>
           </div>
         ) : (
-          <div className="flex-1 overflow-x-auto overflow-y-auto max-h-[560px] scrollbar-light overscroll-x-contain">
+          <div className="overflow-x-auto w-full overscroll-x-contain">
             <table className="w-full text-left border-collapse min-w-[750px]">
-              <thead className="sticky top-0 bg-white z-10 shadow-xs">
+              <thead>
                 <tr className="text-xs text-gray-500 border-b border-gray-100">
-                  <th className="pb-4 pt-1 font-normal bg-white">Asset</th>
-                  <th className="pb-4 pt-1 font-normal bg-white">Type</th>
-                  <th className="pb-4 pt-1 font-normal bg-white">Provider</th>
-                  <th className="pb-4 pt-1 font-normal bg-white">Expiry</th>
-                  <th className="pb-4 pt-1 font-normal bg-white">Days Left</th>
-                  <th className="pb-4 pt-1 font-normal bg-white">Cost</th>
-                  <th className="pb-4 pt-1 font-normal bg-white">Status</th>
+                  <th className="pb-4 font-normal">Asset</th>
+                  <th className="pb-4 font-normal">Type</th>
+                  <th className="pb-4 font-normal">Provider</th>
+                  <th className="pb-4 font-normal">Expiry</th>
+                  <th className="pb-4 font-normal">Days Left</th>
+                  <th className="pb-4 font-normal">Cost</th>
+                  <th className="pb-4 font-normal">Status</th>
                 </tr>
               </thead>
               <tbody className="text-sm">

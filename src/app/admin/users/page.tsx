@@ -79,7 +79,7 @@ export default function AdminUsersPage() {
   const clientCount = users.filter((u) => u.role === "client").length;
 
   return (
-    <div className="flex-1 flex flex-col min-h-0 overflow-y-auto pr-2 pb-6">
+    <div className="w-full flex flex-col min-h-full pr-2 pb-16">
       <header className="flex justify-between items-center py-4 px-2 mb-6">
         <div className="flex items-center gap-3">
           <Shield className="w-6 h-6 text-purple-300 drop-shadow-[0_0_8px_rgba(196,181,253,0.6)]" />
@@ -158,15 +158,15 @@ export default function AdminUsersPage() {
             <p className="text-lg font-medium text-gray-500">No users found</p>
           </div>
         ) : (
-          <div className="flex-1 overflow-x-auto overflow-y-auto max-h-[560px] scrollbar-light overscroll-x-contain">
+          <div className="overflow-x-auto w-full overscroll-x-contain">
             <table className="w-full text-left border-collapse min-w-[700px]">
-              <thead className="sticky top-0 bg-white z-10 shadow-xs">
+              <thead>
                 <tr className="text-xs text-gray-500 border-b border-gray-100">
-                  <th className="pb-4 pt-1 font-normal bg-white">User</th>
-                  <th className="pb-4 pt-1 font-normal bg-white">Email</th>
-                  <th className="pb-4 pt-1 font-normal bg-white">Role</th>
-                  <th className="pb-4 pt-1 font-normal bg-white">Joined</th>
-                  <th className="pb-4 pt-1 font-normal bg-white">Change Role</th>
+                  <th className="pb-4 font-normal">User</th>
+                  <th className="pb-4 font-normal">Email</th>
+                  <th className="pb-4 font-normal">Role</th>
+                  <th className="pb-4 font-normal">Joined</th>
+                  <th className="pb-4 font-normal">Change Role</th>
                 </tr>
               </thead>
               <tbody className="text-sm">
