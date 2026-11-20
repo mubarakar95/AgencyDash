@@ -43,7 +43,7 @@ export default function PortalInvoicesPage() {
   }
 
   return (
-    <div className="flex flex-col h-full overflow-y-auto pr-2 pb-4">
+    <div className="flex-1 flex flex-col min-h-0 overflow-y-auto pr-2 pb-6">
       <header className="flex justify-between items-center py-4 px-2 mb-6">
         <div className="flex items-center gap-3">
           <FileText className="w-6 h-6 text-blue-300 drop-shadow-[0_0_8px_rgba(147,197,253,0.6)]" />
@@ -98,17 +98,17 @@ export default function PortalInvoicesPage() {
             <p className="text-lg font-medium text-gray-500">No invoices yet</p>
           </div>
         ) : (
-          <div className="flex-1 overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
+          <div className="flex-1 overflow-x-auto overflow-y-auto max-h-[560px] scrollbar-light overscroll-x-contain">
+            <table className="w-full text-left border-collapse min-w-[750px]">
+              <thead className="sticky top-0 bg-white z-10 shadow-xs">
                 <tr className="text-xs text-gray-500 border-b border-gray-100">
-                  <th className="pb-4 font-normal">Invoice</th>
-                  <th className="pb-4 font-normal">Project</th>
-                  <th className="pb-4 font-normal">Issued</th>
-                  <th className="pb-4 font-normal">Due Date</th>
-                  <th className="pb-4 font-normal">Amount</th>
-                  <th className="pb-4 font-normal">Status</th>
-                  <th className="pb-4 font-normal"></th>
+                  <th className="pb-4 pt-1 font-normal bg-white">Invoice</th>
+                  <th className="pb-4 pt-1 font-normal bg-white">Project</th>
+                  <th className="pb-4 pt-1 font-normal bg-white">Issued</th>
+                  <th className="pb-4 pt-1 font-normal bg-white">Due Date</th>
+                  <th className="pb-4 pt-1 font-normal bg-white">Amount</th>
+                  <th className="pb-4 pt-1 font-normal bg-white">Status</th>
+                  <th className="pb-4 pt-1 font-normal bg-white"></th>
                 </tr>
               </thead>
               <tbody className="text-sm">

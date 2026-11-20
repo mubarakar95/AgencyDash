@@ -133,7 +133,7 @@ export default function ClientDetailPage({ params }: { params: Promise<{ id: str
   };
 
   return (
-    <div className="flex flex-col h-full overflow-y-auto pr-2 pb-8">
+    <div className="flex-1 flex flex-col min-h-0 overflow-y-auto pr-2 pb-8">
       {/* Top Breadcrumb & Action bar */}
       <div className="flex items-center justify-between py-4 px-2 mb-4 shrink-0">
         <Link
@@ -316,17 +316,17 @@ export default function ClientDetailPage({ params }: { params: Promise<{ id: str
               <p className="text-xs text-gray-500 mt-1">Create an invoice or record a payment to build the client ledger.</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse text-sm">
-                <thead>
-                  <tr className="text-xs text-gray-400 border-b border-white/5 bg-[#222226]/50">
-                    <th className="py-3 px-6 font-medium">Date</th>
-                    <th className="py-3 px-6 font-medium">Type</th>
-                    <th className="py-3 px-6 font-medium">Description / Reference</th>
-                    <th className="py-3 px-6 font-medium">Method</th>
-                    <th className="py-3 px-6 font-medium text-right">Invoiced (₹)</th>
-                    <th className="py-3 px-6 font-medium text-right">Paid (₹)</th>
-                    <th className="py-3 px-6 font-medium text-right">Running Balance</th>
+            <div className="overflow-x-auto overflow-y-auto max-h-[560px] scrollbar-thin border-t border-white/5 overscroll-x-contain">
+              <table className="w-full text-left border-collapse text-sm min-w-[850px]">
+                <thead className="sticky top-0 bg-[#1e1e23] z-10 shadow-sm">
+                  <tr className="text-xs text-gray-400 border-b border-white/5">
+                    <th className="py-3.5 px-6 font-medium">Date</th>
+                    <th className="py-3.5 px-6 font-medium">Type</th>
+                    <th className="py-3.5 px-6 font-medium">Description / Reference</th>
+                    <th className="py-3.5 px-6 font-medium">Method</th>
+                    <th className="py-3.5 px-6 font-medium text-right">Invoiced (₹)</th>
+                    <th className="py-3.5 px-6 font-medium text-right">Paid (₹)</th>
+                    <th className="py-3.5 px-6 font-medium text-right">Running Balance</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5">
@@ -400,16 +400,16 @@ export default function ClientDetailPage({ params }: { params: Promise<{ id: str
               <p className="text-xs text-gray-500 mt-1">Issue a bill for this client using the button above.</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse text-sm">
-                <thead>
-                  <tr className="text-xs text-gray-400 border-b border-white/5 bg-[#222226]/50">
-                    <th className="py-3 px-6 font-medium">Invoice #</th>
-                    <th className="py-3 px-6 font-medium">Project</th>
-                    <th className="py-3 px-6 font-medium">Due Date</th>
-                    <th className="py-3 px-6 font-medium text-right">Amount</th>
-                    <th className="py-3 px-6 font-medium text-center">Status</th>
-                    <th className="py-3 px-6 font-medium text-right">Action</th>
+            <div className="overflow-x-auto overflow-y-auto max-h-[560px] scrollbar-thin border-t border-white/5 overscroll-x-contain">
+              <table className="w-full text-left border-collapse text-sm min-w-[750px]">
+                <thead className="sticky top-0 bg-[#1e1e23] z-10 shadow-sm">
+                  <tr className="text-xs text-gray-400 border-b border-white/5">
+                    <th className="py-3.5 px-6 font-medium">Invoice #</th>
+                    <th className="py-3.5 px-6 font-medium">Project</th>
+                    <th className="py-3.5 px-6 font-medium">Due Date</th>
+                    <th className="py-3.5 px-6 font-medium text-right">Amount</th>
+                    <th className="py-3.5 px-6 font-medium text-center">Status</th>
+                    <th className="py-3.5 px-6 font-medium text-right">Action</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5">

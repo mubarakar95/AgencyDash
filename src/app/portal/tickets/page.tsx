@@ -214,7 +214,7 @@ export default function PortalTicketsPage() {
   }
 
   return (
-    <div className="flex flex-col h-full overflow-y-auto pr-2 pb-4">
+    <div className="flex-1 flex flex-col min-h-0 overflow-y-auto pr-2 pb-6">
       <header className="flex justify-between items-center py-4 px-2 mb-6">
         <div className="flex items-center gap-3">
           <Ticket className="w-6 h-6 text-blue-300 drop-shadow-[0_0_8px_rgba(147,197,253,0.6)]" />
@@ -333,15 +333,15 @@ export default function PortalTicketsPage() {
             <p className="text-sm text-gray-400 mt-1">Submit a ticket to get help from our team.</p>
           </div>
         ) : (
-          <div className="flex-1 overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
+          <div className="flex-1 overflow-x-auto overflow-y-auto max-h-[560px] scrollbar-light overscroll-x-contain">
+            <table className="w-full text-left border-collapse min-w-[650px]">
+              <thead className="sticky top-0 bg-white z-10 shadow-xs">
                 <tr className="text-xs text-gray-500 border-b border-gray-100">
-                  <th className="pb-4 font-normal">Subject</th>
-                  <th className="pb-4 font-normal">Priority</th>
-                  <th className="pb-4 font-normal">Status</th>
-                  <th className="pb-4 font-normal">Date</th>
-                  <th className="pb-4 font-normal w-10"></th>
+                  <th className="pb-4 pt-1 font-normal bg-white">Subject</th>
+                  <th className="pb-4 pt-1 font-normal bg-white">Priority</th>
+                  <th className="pb-4 pt-1 font-normal bg-white">Status</th>
+                  <th className="pb-4 pt-1 font-normal bg-white">Date</th>
+                  <th className="pb-4 pt-1 font-normal w-10 bg-white"></th>
                 </tr>
               </thead>
               <tbody className="text-sm">

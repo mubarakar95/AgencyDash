@@ -141,7 +141,7 @@ export default function TasksPage() {
   }
 
   return (
-    <div className="flex flex-col h-full overflow-y-auto pr-2 pb-4">
+    <div className="flex-1 flex flex-col min-h-0 overflow-y-auto pr-2 pb-6">
       <header className="flex justify-between items-center py-4 px-2 mb-6">
         <div className="flex items-center gap-3">
           <ClipboardList className="w-6 h-6 text-emerald-300 drop-shadow-[0_0_8px_rgba(110,231,183,0.6)]" />
@@ -302,20 +302,20 @@ export default function TasksPage() {
               <p className="text-lg font-medium text-gray-500">No tasks found</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="text-xs text-gray-500 border-b border-gray-100">
-                    <th className="pb-4 font-normal">Task</th>
-                    <th className="pb-4 font-normal">Type</th>
-                    <th className="pb-4 font-normal">Priority</th>
-                    <th className="pb-4 font-normal">Status</th>
-                    <th className="pb-4 font-normal">Project</th>
-                    <th className="pb-4 font-normal">Hours</th>
-                    <th className="pb-4 font-normal">Assignee</th>
-                    <th className="pb-4 font-normal">Due</th>
-                  </tr>
-                </thead>
+          <div className="overflow-x-auto overflow-y-auto max-h-[580px] scrollbar-light overscroll-x-contain">
+            <table className="w-full text-left border-collapse min-w-[850px]">
+              <thead className="sticky top-0 bg-white z-10 shadow-xs">
+                <tr className="text-xs text-gray-500 border-b border-gray-100">
+                  <th className="pb-4 pt-1 font-normal bg-white">Task</th>
+                  <th className="pb-4 pt-1 font-normal bg-white">Type</th>
+                  <th className="pb-4 pt-1 font-normal bg-white">Priority</th>
+                  <th className="pb-4 pt-1 font-normal bg-white">Status</th>
+                  <th className="pb-4 pt-1 font-normal bg-white">Project</th>
+                  <th className="pb-4 pt-1 font-normal bg-white">Hours</th>
+                  <th className="pb-4 pt-1 font-normal bg-white">Assignee</th>
+                  <th className="pb-4 pt-1 font-normal bg-white">Due</th>
+                </tr>
+              </thead>
                 <tbody className="text-sm">
                   {filteredTasks.map((task) => {
                     const TypeIcon = typeFilterConfig[task.type]?.icon || ListTodo;

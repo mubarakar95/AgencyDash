@@ -38,7 +38,7 @@ export default function TeamPage() {
   const displayTeam = searchQuery ? filtered : team;
 
   return (
-    <div className="flex flex-col h-full overflow-y-auto pr-2 pb-4">
+    <div className="flex-1 flex flex-col min-h-0 overflow-y-auto pr-2 pb-6">
       <header className="flex justify-between items-center py-4 px-2 mb-6">
         <div className="flex items-center gap-3">
           <Users className="w-6 h-6 text-blue-300 drop-shadow-[0_0_8px_rgba(147,197,253,0.6)]" />
@@ -69,15 +69,15 @@ export default function TeamPage() {
             <p className="text-sm text-gray-400 mt-1">Add developers and designers to your team.</p>
           </div>
         ) : (
-          <div className="flex-1 overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
+          <div className="flex-1 overflow-x-auto overflow-y-auto max-h-[560px] scrollbar-light overscroll-x-contain">
+            <table className="w-full text-left border-collapse min-w-[700px]">
+              <thead className="sticky top-0 bg-white z-10 shadow-xs">
                 <tr className="text-xs text-gray-500 border-b border-gray-100">
-                  <th className="pb-4 font-normal">Member</th>
-                  <th className="pb-4 font-normal">Email</th>
-                  <th className="pb-4 font-normal">Role</th>
-                  <th className="pb-4 font-normal">Projects</th>
-                  <th className="pb-4 font-normal">Workload</th>
+                  <th className="pb-4 pt-1 font-normal bg-white">Member</th>
+                  <th className="pb-4 pt-1 font-normal bg-white">Email</th>
+                  <th className="pb-4 pt-1 font-normal bg-white">Role</th>
+                  <th className="pb-4 pt-1 font-normal bg-white">Projects</th>
+                  <th className="pb-4 pt-1 font-normal bg-white">Workload</th>
                 </tr>
               </thead>
               <tbody className="text-sm">

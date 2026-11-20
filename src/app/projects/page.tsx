@@ -116,7 +116,7 @@ export default function ProjectsPage() {
   }
 
   return (
-    <div className="flex flex-col h-full overflow-y-auto pr-2 pb-4">
+    <div className="flex-1 flex flex-col min-h-0 overflow-y-auto pr-2 pb-6">
       <header className="flex justify-between items-center py-4 px-2 mb-6">
         <div className="flex items-center gap-3">
           <FolderOpen className="w-6 h-6 text-blue-300 drop-shadow-[0_0_8px_rgba(147,197,253,0.6)]" />
@@ -188,7 +188,7 @@ export default function ProjectsPage() {
             </div>
           </div>
 
-          <div className="flex-1 overflow-x-auto">
+          <div className="flex-1 overflow-x-auto overflow-y-auto max-h-[560px] scrollbar-light overscroll-x-contain">
             {(searchQuery ? filteredProjects : projects).length === 0 ? (
               <div className="flex flex-col items-center justify-center py-16 text-gray-400">
                 <FolderOpen className="w-12 h-12 mb-4 text-gray-300" />
@@ -196,15 +196,15 @@ export default function ProjectsPage() {
                 <p className="text-sm text-gray-400 mt-1">Create your first project to get started.</p>
               </div>
             ) : (
-              <table className="w-full text-left border-collapse">
-                <thead>
+              <table className="w-full text-left border-collapse min-w-[780px]">
+                <thead className="sticky top-0 bg-white z-10 shadow-xs">
                   <tr className="text-xs text-gray-500 border-b border-gray-100">
-                    <th className="pb-4 font-normal">Project</th>
-                    <th className="pb-4 font-normal">Status</th>
-                    <th className="pb-4 font-normal">Progress</th>
-                    <th className="pb-4 font-normal">Budget</th>
-                    <th className="pb-4 font-normal">Deadline</th>
-                    <th className="pb-4 font-normal w-10"></th>
+                    <th className="pb-4 pt-1 font-normal bg-white">Project</th>
+                    <th className="pb-4 pt-1 font-normal bg-white">Status</th>
+                    <th className="pb-4 pt-1 font-normal bg-white">Progress</th>
+                    <th className="pb-4 pt-1 font-normal bg-white">Budget</th>
+                    <th className="pb-4 pt-1 font-normal bg-white">Deadline</th>
+                    <th className="pb-4 pt-1 font-normal w-10 bg-white"></th>
                   </tr>
                 </thead>
                 <tbody className="text-sm">
