@@ -333,8 +333,8 @@ export default function PortalTicketsPage() {
             <p className="text-sm text-gray-400 mt-1">Submit a ticket to get help from our team.</p>
           </div>
         ) : (
-          <div className="overflow-x-auto w-full overscroll-x-contain">
-            <table className="w-full text-left border-collapse min-w-[650px]">
+          <div className="w-full">
+            <table className="w-full text-left border-collapse table-auto">
               <thead>
                 <tr className="text-xs text-gray-500 border-b border-gray-100">
                   <th className="pb-4 font-normal">Subject</th>

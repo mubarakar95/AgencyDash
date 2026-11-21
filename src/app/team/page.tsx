@@ -47,40 +47,45 @@ export default function TeamPage() {
         </div>
       </header>
 
-      <div className="widget-shape-light p-8 flex flex-col shadow-xl mx-2">
-        <div className="flex justify-between items-center mb-6">
-          <h3 className="text-xl font-medium text-gray-900">Team Members</h3>
+      <div className="bg-[#1a1a1e] rounded-2xl border border-white/5 mx-2 overflow-hidden">
+        <div className="p-4 sm:p-5 border-b border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5">
+            <h3 className="text-base font-bold text-white">Team Members</h3>
+            <span className="text-xs text-gray-400 bg-white/5 px-2.5 py-0.5 rounded-full border border-white/5">
+              {displayTeam.length} members
+            </span>
+          </div>
           <div className="relative">
-            <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-3.5 h-3.5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               placeholder="Search members..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-4 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 w-56"
+              className="pl-8 pr-3 py-1.5 bg-[#222226] border border-white/10 rounded-xl text-xs text-white placeholder:text-gray-500 focus:outline-none focus:border-white/20 w-56"
             />
           </div>
         </div>
 
         {displayTeam.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 text-gray-400">
-            <Users className="w-12 h-12 mb-4 text-gray-300" />
-            <p className="text-lg font-medium text-gray-500">No team members yet</p>
-            <p className="text-sm text-gray-400 mt-1">Add developers and designers to your team.</p>
+            <Users className="w-10 h-10 mb-3 text-gray-500" />
+            <p className="text-base font-semibold text-white">No team members yet</p>
+            <p className="text-xs text-gray-500 mt-1">Add developers and designers to your team.</p>
           </div>
         ) : (
-          <div className="overflow-x-auto w-full overscroll-x-contain">
-            <table className="w-full text-left border-collapse min-w-[700px]">
+          <div className="w-full">
+            <table className="w-full text-left border-collapse table-auto">
               <thead>
-                <tr className="text-xs text-gray-500 border-b border-gray-100">
-                  <th className="pb-4 font-normal">Member</th>
-                  <th className="pb-4 font-normal">Email</th>
-                  <th className="pb-4 font-normal">Role</th>
-                  <th className="pb-4 font-normal">Projects</th>
-                  <th className="pb-4 font-normal">Workload</th>
+                <tr className="border-b border-white/5 text-[11px] text-gray-400 uppercase tracking-wider bg-white/[0.02]">
+                  <th className="py-2.5 px-3 sm:px-4 font-semibold">Member</th>
+                  <th className="py-2.5 px-3 sm:px-4 font-semibold">Contact</th>
+                  <th className="py-2.5 px-3 sm:px-4 font-semibold">Role</th>
+                  <th className="py-2.5 px-3 sm:px-4 font-semibold text-center">Projects</th>
+                  <th className="py-2.5 px-3 sm:px-4 font-semibold text-right">Workload</th>
                 </tr>
               </thead>
-              <tbody className="text-sm">
+              <tbody className="divide-y divide-white/5 text-xs">
                 {displayTeam.map((member) => {
                   const workloadColor =
                     (member.workload || 0) > 80
@@ -89,37 +94,36 @@ export default function TeamPage() {
                       ? "bg-amber-500"
                       : "bg-emerald-500";
                   return (
-                    <tr key={member.id} className="border-b border-gray-100 border-dashed last:border-0 hover:bg-gray-50/50 transition-colors">
-                      <td className="py-5">
-                        <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-white text-xs font-bold">
+                    <tr key={member.id} className="hover:bg-white/[0.02] transition-colors">
+                      <td className="py-2.5 px-3 sm:px-4">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-7 h-7 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 text-xs font-bold shrink-0">
                             {member.name.split(" ").map((n: string) => n[0]).join("")}
                           </div>
-                          <span className="font-medium text-gray-900">{member.name}</span>
+                          <span className="font-semibold text-white">{member.name}</span>
                         </div>
                       </td>
-                      <td className="py-5">
-                        <div className="flex items-center gap-2 text-gray-600">
-                          <Mail className="w-3.5 h-3.5 text-gray-400" />
-                          {member.email}
+                      <td className="py-2.5 px-3 sm:px-4">
+                        <div className="flex items-center gap-1.5 text-gray-400">
+                          <Mail className="w-3 h-3 text-gray-500 shrink-0" />
+                          <span className="truncate max-w-[180px]">{member.email}</span>
                         </div>
                       </td>
-                      <td className="py-5 text-gray-600">{member.role}</td>
-                      <td className="py-5">
-                        <div className="flex items-center gap-2 text-gray-600">
-                          <FolderOpen className="w-3.5 h-3.5 text-gray-400" />
-                          {member.active_projects || 0}
-                        </div>
+                      <td className="py-2.5 px-3 sm:px-4 text-gray-300 capitalize">{member.role}</td>
+                      <td className="py-2.5 px-3 sm:px-4 text-center">
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-white/5 text-gray-300 border border-white/10">
+                          {member.active_projects || 0} active
+                        </span>
                       </td>
-                      <td className="py-5">
-                        <div className="flex items-center gap-3">
-                          <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden max-w-[80px]">
+                      <td className="py-2.5 px-3 sm:px-4 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <div className="w-16 h-1.5 bg-white/10 rounded-full overflow-hidden">
                             <div
                               className={`h-full rounded-full ${workloadColor}`}
                               style={{ width: `${Math.min(100, member.workload || 0)}%` }}
                             />
                           </div>
-                          <span className="text-xs font-medium text-gray-500">{member.workload || 0}%</span>
+                          <span className="text-[11px] font-mono text-gray-400">{member.workload || 0}%</span>
                         </div>
                       </td>
                     </tr>

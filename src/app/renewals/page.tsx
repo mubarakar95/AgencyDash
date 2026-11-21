@@ -102,100 +102,114 @@ export default function RenewalsPage() {
         </button>
       </header>
 
-      <div className="widget-shape-light p-8 flex flex-col shadow-xl mx-2">
-        <div className="flex justify-between items-center mb-6">
-          <h3 className="text-xl font-medium text-gray-900">Asset Directory</h3>
+      <div className="bg-[#1a1a1e] rounded-2xl border border-white/5 mx-2 overflow-hidden">
+        <div className="p-4 sm:p-5 border-b border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5">
+            <h3 className="text-base font-bold text-white">Asset Directory</h3>
+            <span className="text-xs text-gray-400 bg-white/5 px-2.5 py-0.5 rounded-full border border-white/5">
+              {displayRenewals.length} assets
+            </span>
+          </div>
           <div className="relative">
-            <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-3.5 h-3.5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               placeholder="Search assets..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-4 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 w-64"
+              className="pl-8 pr-3 py-1.5 bg-[#222226] border border-white/10 rounded-xl text-xs text-white placeholder:text-gray-500 focus:outline-none focus:border-white/20 w-60"
             />
           </div>
         </div>
 
         {displayRenewals.length === 0 ? (
-          <div className="flex-1 flex flex-col items-center justify-center py-16 text-gray-400">
-            <Globe className="w-12 h-12 mb-4 text-gray-300" />
-            <p className="text-lg font-medium text-gray-500">No assets found</p>
-            <p className="text-sm text-gray-400 mt-1">Add your first domain, hosting, or license to start tracking.</p>
+          <div className="flex flex-col items-center justify-center py-16 text-gray-400">
+            <Globe className="w-10 h-10 mb-3 text-gray-500" />
+            <p className="text-base font-semibold text-white">No assets found</p>
+            <p className="text-xs text-gray-500 mt-1">Add your first domain, hosting, or license to start tracking.</p>
             <button
               onClick={() => setIsModalOpen(true)}
-              className="mt-4 px-5 py-2.5 bg-white text-gray-900 rounded-xl text-sm font-bold shadow-[0_0_15px_rgba(0,0,0,0.1)] hover:scale-105 transition-transform flex items-center gap-2"
+              className="mt-4 px-4 py-2 bg-white text-gray-900 rounded-xl text-xs font-bold hover:scale-105 transition-transform flex items-center gap-1.5"
             >
-              <Plus className="w-4 h-4" /> Add Asset
+              <Plus className="w-3.5 h-3.5" /> Add Asset
             </button>
           </div>
         ) : (
-          <div className="overflow-x-auto w-full overscroll-x-contain">
-            <table className="w-full text-left border-collapse min-w-[850px]">
+          <div className="w-full">
+            <table className="w-full text-left border-collapse table-auto">
               <thead>
-                <tr className="text-xs text-gray-500 border-b border-gray-100">
-                  <th className="pb-4 font-normal">Asset</th>
-                  <th className="pb-4 font-normal">Type</th>
-                  <th className="pb-4 font-normal">Provider</th>
-                  <th className="pb-4 font-normal">Expiry</th>
-                  <th className="pb-4 font-normal">Days Left</th>
-                  <th className="pb-4 font-normal">Cost</th>
-                  <th className="pb-4 font-normal">Status</th>
-                  <th className="pb-4 font-normal w-16">Actions</th>
+                <tr className="border-b border-white/5 text-[11px] text-gray-400 uppercase tracking-wider bg-white/[0.02]">
+                  <th className="py-2.5 px-3 sm:px-4 font-semibold">Asset</th>
+                  <th className="py-2.5 px-3 sm:px-4 font-semibold">Type & Provider</th>
+                  <th className="py-2.5 px-3 sm:px-4 font-semibold">Expiry</th>
+                  <th className="py-2.5 px-3 sm:px-4 font-semibold">Days Left</th>
+                  <th className="py-2.5 px-3 sm:px-4 font-semibold text-right">Cost</th>
+                  <th className="py-2.5 px-3 sm:px-4 font-semibold text-center">Status</th>
+                  <th className="py-2.5 px-3 sm:px-4 font-semibold text-center w-16">Actions</th>
                 </tr>
               </thead>
-              <tbody className="text-sm">
+              <tbody className="divide-y divide-white/5 text-xs">
                 {displayRenewals.map((renewal) => {
                   const daysLeft = getDaysUntil(renewal.expiry_date);
                   const statusColors =
                     renewal.status === "safe"
-                      ? "bg-green-100 text-green-700"
+                      ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
                       : renewal.status === "warning"
-                      ? "bg-amber-100 text-amber-700"
+                      ? "bg-amber-500/10 text-amber-400 border-amber-500/20"
                       : renewal.status === "critical"
-                      ? "bg-red-100 text-red-700"
-                      : "bg-gray-100 text-gray-600";
+                      ? "bg-red-500/10 text-red-400 border-red-500/20"
+                      : "bg-white/5 text-gray-400 border-white/10";
 
                   return (
-                    <tr key={renewal.id} className="border-b border-gray-100 border-dashed last:border-0 hover:bg-gray-50/50 transition-colors group">
-                      <td className="py-5">
-                        <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-white text-xs font-bold">
+                    <tr key={renewal.id} className="hover:bg-white/[0.02] transition-colors group">
+                      <td className="py-2.5 px-3 sm:px-4">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-7 h-7 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 text-xs font-bold shrink-0">
                             {renewal.asset_name?.charAt(0).toUpperCase()}
                           </div>
-                          <p className="font-medium text-gray-900">{renewal.asset_name}</p>
+                          <span className="font-semibold text-white truncate max-w-[160px] sm:max-w-[220px]">
+                            {renewal.asset_name}
+                          </span>
                         </div>
                       </td>
-                      <td className="py-5">
-                        <span className="text-xs text-gray-600 capitalize">{renewal.type}</span>
+                      <td className="py-2.5 px-3 sm:px-4">
+                        <span className="text-gray-300 capitalize">{renewal.type}</span>
+                        {renewal.provider && (
+                          <span className="text-[10px] text-gray-500 block truncate max-w-[150px]">
+                            via {renewal.provider}
+                          </span>
+                        )}
                       </td>
-                      <td className="py-5 text-gray-600">{renewal.provider || "—"}</td>
-                      <td className="py-5 text-gray-600">
+                      <td className="py-2.5 px-3 sm:px-4 text-gray-400 whitespace-nowrap">
                         {renewal.expiry_date ? new Date(renewal.expiry_date).toLocaleDateString() : "—"}
                       </td>
-                      <td className="py-5">
-                        <span className={`text-xs font-medium ${daysLeft < 0 ? "text-red-500" : daysLeft < 30 ? "text-red-500" : daysLeft < 90 ? "text-amber-500" : "text-emerald-500"}`}>
+                      <td className="py-2.5 px-3 sm:px-4 whitespace-nowrap">
+                        <span className={`text-xs font-semibold ${
+                          daysLeft < 0 ? "text-red-400" : daysLeft < 30 ? "text-red-400" : daysLeft < 90 ? "text-amber-400" : "text-emerald-400"
+                        }`}>
                           {daysLeft < 0 ? "Expired" : daysLeft === 0 ? "Today" : `${daysLeft}d`}
                         </span>
                       </td>
-                      <td className="py-5 font-medium text-gray-900">${renewal.cost || 0}</td>
-                      <td className="py-5">
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${statusColors}`}>
-                          {renewal.status === "critical" ? "Critical" : renewal.status === "warning" ? "Warning" : renewal.status === "expired" ? "Expired" : "Safe"}
+                      <td className="py-2.5 px-3 sm:px-4 text-right font-mono font-semibold text-white whitespace-nowrap">
+                        ${renewal.cost || 0}
+                      </td>
+                      <td className="py-2.5 px-3 sm:px-4 text-center whitespace-nowrap">
+                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border capitalize ${statusColors}`}>
+                          {renewal.status}
                         </span>
                       </td>
-                      <td className="py-5">
-                        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <td className="py-2.5 px-3 sm:px-4 text-center whitespace-nowrap">
+                        <div className="flex items-center justify-center gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
                           <button
                             onClick={() => setEditingRenewal(renewal)}
-                            className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-700 transition-colors"
+                            className="p-1 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
                             title="Edit"
                           >
                             <Pencil className="w-3.5 h-3.5" />
                           </button>
                           <button
                             onClick={() => setDeletingRenewal(renewal)}
-                            className="p-1.5 rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-500 transition-colors"
+                            className="p-1 rounded-lg hover:bg-red-500/20 text-gray-400 hover:text-red-400 transition-colors"
                             title="Delete"
                           >
                             <Trash2 className="w-3.5 h-3.5" />

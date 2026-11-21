@@ -118,98 +118,124 @@ export default function FollowUpsPage() {
         </button>
       </header>
 
-      <div className="widget-shape-light p-8 flex flex-col shadow-xl mx-2">
-        <div className="flex justify-between items-center mb-6">
-          <h3 className="text-xl font-medium text-gray-900">Follow-ups</h3>
+      <div className="bg-[#1a1a1e] rounded-2xl border border-white/5 mx-2 overflow-hidden">
+        <div className="p-4 sm:p-5 border-b border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5">
+            <h3 className="text-base font-bold text-white">Scheduled Follow-ups</h3>
+            <span className="text-xs text-gray-400 bg-white/5 px-2.5 py-0.5 rounded-full border border-white/5">
+              {(searchQuery ? filtered : followUps).length} items
+            </span>
+          </div>
           <div className="relative">
-            <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-3.5 h-3.5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               placeholder="Search..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-4 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 w-56"
+              className="pl-8 pr-3 py-1.5 bg-[#222226] border border-white/10 rounded-xl text-xs text-white placeholder:text-gray-500 focus:outline-none focus:border-white/20 w-56"
             />
           </div>
         </div>
 
         {(searchQuery ? filtered : followUps).length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 text-gray-400">
-            <CalendarDays className="w-12 h-12 mb-4 text-gray-300" />
-            <p className="text-lg font-medium text-gray-500">No follow-ups yet</p>
-            <p className="text-sm text-gray-400 mt-1">Schedule reminders and outreach for your clients.</p>
+            <CalendarDays className="w-10 h-10 mb-3 text-gray-500" />
+            <p className="text-base font-semibold text-white">No follow-ups yet</p>
+            <p className="text-xs text-gray-500 mt-1">Schedule reminders and outreach for your clients.</p>
             <button
               onClick={() => setShowNewModal(true)}
-              className="mt-4 flex items-center gap-2 px-4 py-2 bg-white text-gray-900 rounded-xl text-sm font-bold hover:scale-105 transition-transform shadow-[0_0_15px_rgba(255,255,255,0.15)]"
+              className="mt-4 flex items-center gap-1.5 px-4 py-2 bg-white text-gray-900 rounded-xl text-xs font-bold hover:scale-105 transition-transform"
             >
-              <Plus className="w-4 h-4" />
+              <Plus className="w-3.5 h-3.5" />
               Add Follow-up
             </button>
           </div>
         ) : (
-          <div className="overflow-x-auto w-full overscroll-x-contain">
-            <table className="w-full text-left border-collapse min-w-[750px]">
+          <div className="w-full">
+            <table className="w-full text-left border-collapse table-auto">
               <thead>
-                <tr className="text-xs text-gray-500 border-b border-gray-100">
-                  <th className="pb-4 font-normal">Client</th>
-                  <th className="pb-4 font-normal">Type</th>
-                  <th className="pb-4 font-normal">Scheduled</th>
-                  <th className="pb-4 font-normal">Message</th>
-                  <th className="pb-4 font-normal">Status</th>
-                  <th className="pb-4 font-normal">Actions</th>
+                <tr className="border-b border-white/5 text-[11px] text-gray-400 uppercase tracking-wider bg-white/[0.02]">
+                  <th className="py-2.5 px-3 sm:px-4 font-semibold">Client</th>
+                  <th className="py-2.5 px-3 sm:px-4 font-semibold">Type</th>
+                  <th className="py-2.5 px-3 sm:px-4 font-semibold">Scheduled Date</th>
+                  <th className="py-2.5 px-3 sm:px-4 font-semibold">Note / Message</th>
+                  <th className="py-2.5 px-3 sm:px-4 font-semibold text-center">Status</th>
+                  <th className="py-2.5 px-3 sm:px-4 font-semibold text-center w-24">Actions</th>
                 </tr>
               </thead>
-              <tbody className="text-sm">
+              <tbody className="divide-y divide-white/5 text-xs">
                 {(searchQuery ? filtered : followUps).map((followUp) => {
                   const client = clients.find((c) => c.id === followUp.client_id);
-                  const colorClass = statusColors[followUp.status] || statusColors.pending;
+                  const isPending = followUp.status === "pending";
+                  const isCompleted = followUp.status === "completed";
+                  const isSnoozed = followUp.status === "snoozed";
+
                   return (
-                    <tr key={followUp.id} className="border-b border-gray-100 border-dashed last:border-0 hover:bg-gray-50/50 transition-colors">
-                      <td className="py-5">
-                        <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-white text-xs font-bold">
+                    <tr key={followUp.id} className="hover:bg-white/[0.02] transition-colors group">
+                      <td className="py-2.5 px-3 sm:px-4">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-7 h-7 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 text-xs font-bold shrink-0">
                             {(client?.name || followUp.clients?.name || "U").charAt(0)}
                           </div>
-                          <span className="font-medium text-gray-900">{client?.name || followUp.clients?.name || "Unknown"}</span>
+                          <span className="font-semibold text-white truncate max-w-[150px]">
+                            {client?.name || followUp.clients?.name || "Unknown"}
+                          </span>
                         </div>
                       </td>
-                      <td className="py-5 text-gray-600 capitalize">{followUp.type.replace("_", " ")}</td>
-                      <td className="py-5 text-gray-600">{followUp.scheduled_date}</td>
-                      <td className="py-5 text-gray-500 max-w-xs truncate">{followUp.message || "—"}</td>
-                      <td className="py-5">
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${colorClass}`}>
-                          {followUp.status.charAt(0).toUpperCase() + followUp.status.slice(1)}
+                      <td className="py-2.5 px-3 sm:px-4 text-gray-300 capitalize whitespace-nowrap">
+                        {followUp.type.replace("_", " ")}
+                      </td>
+                      <td className="py-2.5 px-3 sm:px-4 text-gray-400 whitespace-nowrap">
+                        {followUp.scheduled_date}
+                      </td>
+                      <td className="py-2.5 px-3 sm:px-4 text-gray-300 max-w-[220px] truncate">
+                        {followUp.message || "—"}
+                      </td>
+                      <td className="py-2.5 px-3 sm:px-4 text-center whitespace-nowrap">
+                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border capitalize ${
+                          isCompleted
+                            ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
+                            : isPending
+                            ? "bg-amber-500/10 text-amber-400 border-amber-500/20"
+                            : isSnoozed
+                            ? "bg-purple-500/10 text-purple-400 border-purple-500/20"
+                            : "bg-white/5 text-gray-400 border-white/10"
+                        }`}>
+                          {followUp.status}
                         </span>
                       </td>
-                      <td className="py-5">
-                        <div className="flex items-center gap-1">
+                      <td className="py-2.5 px-3 sm:px-4 text-center whitespace-nowrap">
+                        <div className="flex items-center justify-center gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
+                          {!isCompleted && (
+                            <button
+                              onClick={() => updateStatus(followUp.id, "completed")}
+                              className="p-1 rounded-lg hover:bg-emerald-500/20 text-gray-400 hover:text-emerald-400 transition-colors"
+                              title="Mark Complete"
+                            >
+                              <CheckCircle2 className="w-3.5 h-3.5" />
+                            </button>
+                          )}
                           <button
-                            onClick={() => updateStatus(followUp.id, "completed")}
-                            className="p-1.5 rounded-lg hover:bg-green-50 text-green-600 transition-colors"
-                            title="Mark Complete"
+                            onClick={() => updateStatus(followUp.id, isSnoozed ? "pending" : "snoozed")}
+                            className="p-1 rounded-lg hover:bg-amber-500/20 text-gray-400 hover:text-amber-400 transition-colors"
+                            title={isSnoozed ? "Un-snooze" : "Snooze"}
                           >
-                            <CheckCircle2 className="w-4 h-4" />
-                          </button>
-                          <button
-                            onClick={() => updateStatus(followUp.id, "snoozed")}
-                            className="p-1.5 rounded-lg hover:bg-amber-50 text-amber-600 transition-colors"
-                            title="Snooze"
-                          >
-                            <PauseCircle className="w-4 h-4" />
+                            <PauseCircle className="w-3.5 h-3.5" />
                           </button>
                           <button
                             onClick={() => setEditingFollowUp(followUp)}
-                            className="p-1.5 rounded-lg hover:bg-blue-50 text-blue-600 transition-colors"
+                            className="p-1 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
                             title="Edit"
                           >
-                            <Pencil className="w-4 h-4" />
+                            <Pencil className="w-3.5 h-3.5" />
                           </button>
                           <button
                             onClick={() => setDeletingFollowUp(followUp)}
-                            className="p-1.5 rounded-lg hover:bg-red-50 text-red-500 transition-colors"
+                            className="p-1 rounded-lg hover:bg-red-500/20 text-gray-400 hover:text-red-400 transition-colors"
                             title="Delete"
                           >
-                            <Trash2 className="w-4 h-4" />
+                            <Trash2 className="w-3.5 h-3.5" />
                           </button>
                         </div>
                       </td>

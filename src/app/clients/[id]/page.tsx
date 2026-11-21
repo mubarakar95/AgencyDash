@@ -133,49 +133,29 @@ export default function ClientDetailPage({ params }: { params: Promise<{ id: str
   };
 
   return (
-    <div className="w-full flex flex-col min-h-full pr-2 pb-16">
-      {/* Top Breadcrumb & Action bar */}
-      <div className="flex items-center justify-between py-4 px-2 mb-4 shrink-0">
-        <Link
-          href="/clients"
-          className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors group"
-        >
-          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-          <span>Back to Clients</span>
-        </Link>
+    <div className="w-full flex flex-col min-h-full px-2 sm:px-4 py-4 pb-16">
+      {/* Sleek, Single-Sight Client Header with Key Financials */}
+      <div className="bg-[#1a1a1e] rounded-2xl p-4 sm:p-5 border border-white/5 mb-4 shadow-md">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          {/* Client Identity & Quick Contact */}
+          <div className="flex items-center gap-3.5">
+            <Link
+              href="/clients"
+              className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-gray-400 hover:text-white transition-colors shrink-0"
+              title="Back to Clients"
+            >
+              <ArrowLeft className="w-4 h-4" />
+            </Link>
 
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => setShowRecordPayment(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 rounded-xl text-sm font-semibold transition-colors"
-          >
-            <CreditCard className="w-4 h-4" />
-            Record Payment
-          </button>
-          <button
-            onClick={() => setShowNewInvoice(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-white text-gray-900 rounded-xl text-sm font-bold hover:scale-105 transition-transform shadow-[0_0_15px_rgba(255,255,255,0.15)]"
-          >
-            <Plus className="w-4 h-4" />
-            New Invoice
-          </button>
-        </div>
-      </div>
-
-      {/* Client Overview Header Card */}
-      <div className="bg-[#1a1a1e] rounded-3xl p-6 md:p-8 border border-white/5 mb-6 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
-
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
-          <div className="flex items-start gap-4">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center text-white text-xl font-bold shadow-lg shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center text-white text-sm font-bold shadow-sm shrink-0">
               {client.name?.split(" ").map((n: string) => n[0]).join("").toUpperCase().slice(0, 2)}
             </div>
+
             <div>
-              <div className="flex items-center gap-3 flex-wrap">
-                <h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight">{client.name}</h1>
+              <div className="flex items-center gap-2 flex-wrap">
+                <h1 className="text-lg sm:text-xl font-bold text-white tracking-tight">{client.name}</h1>
                 <span
-                  className={`px-3 py-1 rounded-full text-xs font-medium border ${
+                  className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border ${
                     client.status === "active"
                       ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
                       : "bg-blue-500/10 text-blue-400 border-blue-500/20"
@@ -183,150 +163,135 @@ export default function ClientDetailPage({ params }: { params: Promise<{ id: str
                 >
                   {client.status ? client.status.toUpperCase() : "ACTIVE"}
                 </span>
-                {client.user_id && (
-                  <span className="px-2.5 py-0.5 rounded-full text-[11px] bg-purple-500/10 text-purple-400 border border-purple-500/20">
-                    Client Portal Active
+                <button
+                  onClick={() => setShowEditClient(true)}
+                  className="p-1 hover:bg-white/10 text-gray-400 hover:text-white rounded-md transition-colors"
+                  title="Edit Client"
+                >
+                  <Pencil className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
+              <div className="flex items-center gap-3 text-xs text-gray-400 mt-1 flex-wrap">
+                {client.company && (
+                  <span className="flex items-center gap-1 font-medium text-gray-300">
+                    <Building2 className="w-3.5 h-3.5 text-gray-500" />
+                    {client.company}
+                  </span>
+                )}
+                {client.email && (
+                  <span className="flex items-center gap-1">
+                    <Mail className="w-3.5 h-3.5 text-gray-500" />
+                    {client.email}
+                  </span>
+                )}
+                {client.phone && (
+                  <span className="flex items-center gap-1 text-gray-400">
+                    <Phone className="w-3.5 h-3.5 text-gray-500" />
+                    {client.phone}
                   </span>
                 )}
               </div>
-              {client.company && (
-                <p className="text-gray-400 text-sm mt-1 flex items-center gap-1.5 font-medium">
-                  <Building2 className="w-4 h-4 text-gray-500" />
-                  {client.company}
-                </p>
-              )}
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setShowEditClient(true)}
-              className="px-4 py-2 bg-[#222226] hover:bg-white/10 text-gray-300 hover:text-white rounded-xl text-xs font-medium border border-white/5 transition-colors flex items-center gap-1.5"
-            >
-              <Pencil className="w-3.5 h-3.5" />
-              Edit Profile
-            </button>
-          </div>
-        </div>
+          {/* Direct Key Financials + Action Buttons */}
+          <div className="flex items-center gap-3 sm:gap-4 flex-wrap justify-between lg:justify-end border-t lg:border-t-0 pt-3 lg:pt-0 border-white/5">
+            <div className="flex items-center gap-4 text-xs">
+              <div className="text-right">
+                <span className="text-[10px] uppercase tracking-wider text-gray-500 block">Invoiced</span>
+                <span className="font-semibold text-white">₹{totalInvoiced.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span>
+              </div>
+              <div className="text-right">
+                <span className="text-[10px] uppercase tracking-wider text-gray-500 block">Paid</span>
+                <span className="font-semibold text-emerald-400">₹{totalPaid.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span>
+              </div>
+              <div className="text-right pl-3 border-l border-white/10">
+                <span className="text-[10px] uppercase tracking-wider text-gray-400 block">Balance Due</span>
+                <span className={`font-bold text-sm ${balanceDue > 0 ? "text-red-400" : "text-emerald-400"}`}>
+                  ₹{balanceDue.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
+                </span>
+              </div>
+            </div>
 
-        {/* Contact info grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-6 pt-6 border-t border-white/5 text-xs text-gray-300">
-          <div className="flex items-center gap-2 bg-[#222226] px-3.5 py-2.5 rounded-xl border border-white/5">
-            <Mail className="w-4 h-4 text-gray-500 shrink-0" />
-            <span className="truncate">{client.email || "No email"}</span>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setShowRecordPayment(true)}
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 rounded-xl text-xs font-semibold transition-colors"
+              >
+                <CreditCard className="w-3.5 h-3.5" />
+                Record Payment
+              </button>
+              <button
+                onClick={() => setShowNewInvoice(true)}
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-white text-gray-900 rounded-xl text-xs font-bold hover:scale-105 transition-transform shadow-sm"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                New Invoice
+              </button>
+            </div>
           </div>
-          <div className="flex items-center gap-2 bg-[#222226] px-3.5 py-2.5 rounded-xl border border-white/5">
-            <Phone className="w-4 h-4 text-gray-500 shrink-0" />
-            <span className="truncate">{client.phone || "No phone"}</span>
-          </div>
-          <div className="flex items-center gap-2 bg-[#222226] px-3.5 py-2.5 rounded-xl border border-white/5">
-            <MapPin className="w-4 h-4 text-gray-500 shrink-0" />
-            <span className="truncate">{client.address || "No address provided"}</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Financial Health Overview Bar */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-        <div className="bg-[#1a1a1e] rounded-2xl p-5 border border-white/5">
-          <div className="flex items-center justify-between text-xs text-gray-400 mb-2">
-            <span>Total Invoiced</span>
-            <Receipt className="w-4 h-4 text-blue-400" />
-          </div>
-          <p className="text-2xl font-bold text-white">₹{totalInvoiced.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</p>
-          <p className="text-[11px] text-gray-500 mt-1">{invoices.length} bill{invoices.length === 1 ? "" : "s"} generated</p>
-        </div>
-
-        <div className="bg-[#1a1a1e] rounded-2xl p-5 border border-white/5">
-          <div className="flex items-center justify-between text-xs text-gray-400 mb-2">
-            <span>Total Payments Received</span>
-            <Wallet className="w-4 h-4 text-emerald-400" />
-          </div>
-          <p className="text-2xl font-bold text-emerald-400">₹{totalPaid.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</p>
-          <p className="text-[11px] text-gray-500 mt-1">{transactions.filter((t) => t.type === "payment").length} payment record(s)</p>
-        </div>
-
-        <div className={`rounded-2xl p-5 border ${
-          balanceDue > 0
-            ? "bg-red-500/10 border-red-500/20"
-            : "bg-emerald-500/5 border-emerald-500/20"
-        }`}>
-          <div className="flex items-center justify-between text-xs text-gray-400 mb-2">
-            <span>Current Outstanding Balance</span>
-            <TrendingUp className={`w-4 h-4 ${balanceDue > 0 ? "text-red-400" : "text-emerald-400"}`} />
-          </div>
-          <p className={`text-2xl font-bold ${balanceDue > 0 ? "text-red-400" : "text-emerald-400"}`}>
-            ₹{balanceDue.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
-          </p>
-          <p className="text-[11px] text-gray-400 mt-1">
-            {balanceDue > 0 ? "Pending collection from client" : "All dues settled"}
-          </p>
         </div>
       </div>
 
       {/* Tab Navigation */}
-      <div className="flex items-center gap-2 border-b border-white/5 pb-3 mb-6">
+      <div className="flex items-center gap-2 border-b border-white/5 pb-2.5 mb-4">
         <button
           onClick={() => setActiveTab("ledger")}
-          className={`px-4 py-2 rounded-xl text-sm font-semibold transition-colors flex items-center gap-2 ${
+          className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-colors flex items-center gap-2 ${
             activeTab === "ledger"
               ? "bg-white text-gray-900"
               : "text-gray-400 hover:text-white hover:bg-white/5"
           }`}
         >
-          <Receipt className="w-4 h-4" />
+          <Receipt className="w-3.5 h-3.5" />
           Statement & Ledger ({transactions.length})
         </button>
         <button
           onClick={() => setActiveTab("invoices")}
-          className={`px-4 py-2 rounded-xl text-sm font-semibold transition-colors flex items-center gap-2 ${
+          className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-colors flex items-center gap-2 ${
             activeTab === "invoices"
               ? "bg-white text-gray-900"
               : "text-gray-400 hover:text-white hover:bg-white/5"
           }`}
         >
-          <FileText className="w-4 h-4" />
+          <FileText className="w-3.5 h-3.5" />
           Invoices & Bills ({invoices.length})
         </button>
         <button
           onClick={() => setActiveTab("projects")}
-          className={`px-4 py-2 rounded-xl text-sm font-semibold transition-colors flex items-center gap-2 ${
+          className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-colors flex items-center gap-2 ${
             activeTab === "projects"
               ? "bg-white text-gray-900"
               : "text-gray-400 hover:text-white hover:bg-white/5"
           }`}
         >
-          <FolderOpen className="w-4 h-4" />
+          <FolderOpen className="w-3.5 h-3.5" />
           Projects ({projects.length})
         </button>
       </div>
 
       {/* Tab 1: Financial Ledger Statement */}
       {activeTab === "ledger" && (
-        <div className="bg-[#1a1a1e] rounded-3xl border border-white/5 overflow-hidden">
-          <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between">
-            <h3 className="text-base font-semibold text-white">Financial Statement & Ledger</h3>
-            <span className="text-xs text-gray-400">Chronological activity (Invoices & Payments)</span>
-          </div>
-
+        <div className="bg-[#1a1a1e] rounded-2xl border border-white/5 overflow-hidden shadow-lg">
           {ledgerWithBalance.length === 0 ? (
             <div className="text-center py-16 text-gray-400">
               <Receipt className="w-10 h-10 mx-auto mb-3 text-gray-600" />
-              <p className="text-base font-medium text-gray-300">No transactions recorded yet</p>
+              <p className="text-sm font-medium text-gray-300">No transactions recorded yet</p>
               <p className="text-xs text-gray-500 mt-1">Create an invoice or record a payment to build the client ledger.</p>
             </div>
           ) : (
-            <div className="overflow-x-auto w-full border-t border-white/5 overscroll-x-contain">
-              <table className="w-full text-left border-collapse text-sm min-w-[850px]">
+            <div className="w-full overflow-x-auto">
+              <table className="w-full text-left border-collapse table-auto text-xs">
                 <thead>
-                  <tr className="text-xs text-gray-400 border-b border-white/5 bg-[#222226]/50">
-                    <th className="py-3.5 px-6 font-medium">Date</th>
-                    <th className="py-3.5 px-6 font-medium">Type</th>
-                    <th className="py-3.5 px-6 font-medium">Description / Reference</th>
-                    <th className="py-3.5 px-6 font-medium">Method</th>
-                    <th className="py-3.5 px-6 font-medium text-right">Invoiced (₹)</th>
-                    <th className="py-3.5 px-6 font-medium text-right">Paid (₹)</th>
-                    <th className="py-3.5 px-6 font-medium text-right">Running Balance</th>
+                  <tr className="text-[11px] uppercase tracking-wider text-gray-400 border-b border-white/5 bg-[#222226]/60">
+                    <th className="py-3 px-3 sm:px-4 font-semibold">Date</th>
+                    <th className="py-3 px-3 sm:px-4 font-semibold">Type</th>
+                    <th className="py-3 px-3 sm:px-4 font-semibold">Description / Ref</th>
+                    <th className="py-3 px-3 sm:px-4 font-semibold">Method</th>
+                    <th className="py-3 px-3 sm:px-4 font-semibold text-right">Invoiced (₹)</th>
+                    <th className="py-3 px-3 sm:px-4 font-semibold text-right">Paid (₹)</th>
+                    <th className="py-3 px-3 sm:px-4 font-semibold text-right">Running Balance</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5">
@@ -334,12 +299,12 @@ export default function ClientDetailPage({ params }: { params: Promise<{ id: str
                     const isInvoice = item.type === "invoice";
                     return (
                       <tr key={item.id} className="hover:bg-white/[0.02] transition-colors">
-                        <td className="py-3.5 px-6 text-gray-300 text-xs">
+                        <td className="py-2.5 px-3 sm:px-4 text-gray-300 whitespace-nowrap">
                           {item.date ? new Date(item.date).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "—"}
                         </td>
-                        <td className="py-3.5 px-6">
+                        <td className="py-2.5 px-3 sm:px-4 whitespace-nowrap">
                           <span
-                            className={`px-2.5 py-1 rounded-full text-[11px] font-semibold border ${
+                            className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border ${
                               isInvoice
                                 ? "bg-blue-500/10 text-blue-400 border-blue-500/20"
                                 : "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
@@ -348,24 +313,24 @@ export default function ClientDetailPage({ params }: { params: Promise<{ id: str
                             {isInvoice ? "BILL ISSUED" : "PAYMENT"}
                           </span>
                         </td>
-                        <td className="py-3.5 px-6 text-white font-medium">
-                          {item.description || (isInvoice ? "Invoice" : "Payment")}
+                        <td className="py-2.5 px-3 sm:px-4 text-white font-medium">
+                          <span>{item.description || (isInvoice ? "Invoice" : "Payment")}</span>
                           {item.reference_id && (
-                            <span className="block text-[11px] text-gray-500 font-mono mt-0.5 truncate max-w-xs">
+                            <span className="block text-[10px] text-gray-500 font-mono truncate max-w-xs">
                               Ref: {item.reference_id}
                             </span>
                           )}
                         </td>
-                        <td className="py-3.5 px-6 text-xs text-gray-400 capitalize">
+                        <td className="py-2.5 px-3 sm:px-4 text-gray-400 capitalize whitespace-nowrap">
                           {item.payment_method ? item.payment_method.replace("_", " ") : "—"}
                         </td>
-                        <td className="py-3.5 px-6 text-right font-medium text-white">
+                        <td className="py-2.5 px-3 sm:px-4 text-right font-medium text-white whitespace-nowrap">
                           {isInvoice ? `₹${Number(item.amount).toFixed(2)}` : "—"}
                         </td>
-                        <td className="py-3.5 px-6 text-right font-medium text-emerald-400">
+                        <td className="py-2.5 px-3 sm:px-4 text-right font-medium text-emerald-400 whitespace-nowrap">
                           {!isInvoice ? `₹${Number(item.amount).toFixed(2)}` : "—"}
                         </td>
-                        <td className="py-3.5 px-6 text-right font-bold text-xs">
+                        <td className="py-2.5 px-3 sm:px-4 text-right font-bold whitespace-nowrap">
                           <span className={item.runningBalance > 0 ? "text-amber-400" : "text-emerald-400"}>
                             ₹{item.runningBalance.toFixed(2)}
                           </span>
@@ -382,80 +347,70 @@ export default function ClientDetailPage({ params }: { params: Promise<{ id: str
 
       {/* Tab 2: Invoices List */}
       {activeTab === "invoices" && (
-        <div className="bg-[#1a1a1e] rounded-3xl border border-white/5 overflow-hidden">
-          <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between">
-            <h3 className="text-base font-semibold text-white">Client Invoices</h3>
-            <button
-              onClick={() => setShowNewInvoice(true)}
-              className="text-xs font-semibold px-3 py-1.5 bg-white text-gray-900 rounded-lg hover:scale-105 transition-transform"
-            >
-              + Create Invoice
-            </button>
-          </div>
-
+        <div className="bg-[#1a1a1e] rounded-2xl border border-white/5 overflow-hidden shadow-lg">
           {invoices.length === 0 ? (
             <div className="text-center py-16 text-gray-400">
               <FileText className="w-10 h-10 mx-auto mb-3 text-gray-600" />
-              <p className="text-base font-medium text-gray-300">No invoices generated yet</p>
+              <p className="text-sm font-medium text-gray-300">No invoices generated yet</p>
               <p className="text-xs text-gray-500 mt-1">Issue a bill for this client using the button above.</p>
             </div>
           ) : (
-            <div className="overflow-x-auto w-full border-t border-white/5 overscroll-x-contain">
-              <table className="w-full text-left border-collapse text-sm min-w-[750px]">
+            <div className="w-full overflow-x-auto">
+              <table className="w-full text-left border-collapse table-auto text-xs">
                 <thead>
-                  <tr className="text-xs text-gray-400 border-b border-white/5 bg-[#222226]/50">
-                    <th className="py-3.5 px-6 font-medium">Invoice #</th>
-                    <th className="py-3.5 px-6 font-medium">Project</th>
-                    <th className="py-3.5 px-6 font-medium">Due Date</th>
-                    <th className="py-3.5 px-6 font-medium text-right">Amount</th>
-                    <th className="py-3.5 px-6 font-medium text-center">Status</th>
-                    <th className="py-3.5 px-6 font-medium text-right">Action</th>
+                  <tr className="text-[11px] uppercase tracking-wider text-gray-400 border-b border-white/5 bg-[#222226]/60">
+                    <th className="py-3 px-3 sm:px-4 font-semibold">Invoice #</th>
+                    <th className="py-3 px-3 sm:px-4 font-semibold">Project</th>
+                    <th className="py-3 px-3 sm:px-4 font-semibold">Due Date</th>
+                    <th className="py-3 px-3 sm:px-4 font-semibold text-right">Amount</th>
+                    <th className="py-3 px-3 sm:px-4 font-semibold text-center">Status</th>
+                    <th className="py-3 px-3 sm:px-4 font-semibold text-right">Action</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5">
                   {invoices.map((inv) => (
                     <tr key={inv.id} className="hover:bg-white/[0.02] transition-colors">
-                      <td className="py-3.5 px-6 font-bold text-white">
+                      <td className="py-2.5 px-3 sm:px-4 font-bold text-white whitespace-nowrap">
                         <Link
                           href={`/invoices/${inv.id}`}
                           target="_blank"
                           className="hover:text-blue-400 transition-colors inline-flex items-center gap-1.5"
                         >
                           {inv.invoice_number}
-                          <ExternalLink className="w-3.5 h-3.5 text-gray-500" />
+                          <ExternalLink className="w-3 h-3 text-gray-500" />
                         </Link>
                       </td>
-                      <td className="py-3.5 px-6 text-gray-300 text-xs">
+                      <td className="py-2.5 px-3 sm:px-4 text-gray-300">
                         {inv.projects?.name || "—"}
                       </td>
-                      <td className="py-3.5 px-6 text-gray-400 text-xs">
+                      <td className="py-2.5 px-3 sm:px-4 text-gray-400 whitespace-nowrap">
                         {inv.due_date ? new Date(inv.due_date).toLocaleDateString() : "—"}
                       </td>
-                      <td className="py-3.5 px-6 text-right font-semibold text-white">
+                      <td className="py-2.5 px-3 sm:px-4 text-right font-semibold text-white whitespace-nowrap">
                         {inv.currency === "USD" ? "$" : "₹"}
                         {Number(inv.amount || 0).toLocaleString()}
                       </td>
-                      <td className="py-3.5 px-6 text-center">
-                        <span className={`px-2.5 py-1 rounded-full text-xs font-semibold border ${statusColors[inv.status] || "text-gray-400"}`}>
+                      <td className="py-2.5 px-3 sm:px-4 text-center whitespace-nowrap">
+                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border ${statusColors[inv.status] || "text-gray-400"}`}>
                           {inv.status ? inv.status.toUpperCase() : "DRAFT"}
                         </span>
                       </td>
-                      <td className="py-3.5 px-6 text-right">
-                        <div className="flex items-center justify-end gap-2">
+                      <td className="py-2.5 px-3 sm:px-4 text-right whitespace-nowrap">
+                        <div className="flex items-center justify-end gap-1.5">
                           <button
                             onClick={() => setEditInvoice(inv)}
-                            className="p-1.5 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
+                            className="p-1 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
                             title="Edit Invoice"
                           >
-                            <Pencil className="w-3.5 h-3.5" />
+                            <Pencil className="w-3 h-3" />
                           </button>
                           <Link
                             href={`/invoices/${inv.id}`}
                             target="_blank"
-                            className="p-1.5 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
+                            className="p-1 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
                             title="Print / View"
                           >
-                            <Download className="w-3.5 h-3.5" />
+                            <Download className="w-3 h-3" />
                           </Link>
                         </div>
                       </td>
@@ -472,29 +427,29 @@ export default function ClientDetailPage({ params }: { params: Promise<{ id: str
       {activeTab === "projects" && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {projects.length === 0 ? (
-            <div className="col-span-2 text-center py-16 bg-[#1a1a1e] rounded-3xl border border-white/5 text-gray-400">
+            <div className="col-span-2 text-center py-16 bg-[#1a1a1e] rounded-2xl border border-white/5 text-gray-400">
               <FolderOpen className="w-10 h-10 mx-auto mb-3 text-gray-600" />
-              <p className="text-base font-medium text-gray-300">No projects linked to this client</p>
+              <p className="text-sm font-medium text-gray-300">No projects linked to this client</p>
             </div>
           ) : (
             projects.map((p) => (
-              <div key={p.id} className="bg-[#1a1a1e] rounded-2xl p-5 border border-white/5 flex flex-col justify-between">
+              <div key={p.id} className="bg-[#1a1a1e] rounded-2xl p-4 sm:p-5 border border-white/5 flex flex-col justify-between">
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <h4 className="text-base font-bold text-white">{p.name}</h4>
-                    <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-white/5 text-gray-300 capitalize border border-white/10">
+                    <h4 className="text-sm sm:text-base font-bold text-white">{p.name}</h4>
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-white/5 text-gray-300 capitalize border border-white/10">
                       {p.status}
                     </span>
                   </div>
                   <p className="text-xs text-gray-400">Budget: ₹{Number(p.budget || 0).toLocaleString()}</p>
                 </div>
 
-                <div className="mt-4 pt-4 border-t border-white/5">
-                  <div className="flex items-center justify-between text-xs text-gray-400 mb-1.5">
+                <div className="mt-3 pt-3 border-t border-white/5">
+                  <div className="flex items-center justify-between text-xs text-gray-400 mb-1">
                     <span>Progress</span>
                     <span>{p.progress || 0}%</span>
                   </div>
-                  <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden">
+                  <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
                     <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${p.progress || 0}%` }} />
                   </div>
                 </div>

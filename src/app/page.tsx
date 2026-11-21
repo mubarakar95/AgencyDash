@@ -159,70 +159,60 @@ export default function DashboardPage() {
         </div>
       </section>
 
-      {/* 4 Balanced Financial & Ops KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 px-2 mb-8 shrink-0">
-        {/* Outstanding Receivables */}
-        <div className="bg-[#1a1a1e] rounded-2xl p-5 border border-white/5 relative overflow-hidden">
-          <div className="flex items-center justify-between text-xs text-gray-400 mb-2">
-            <span>Pending Receivables</span>
-            <div className="p-2 rounded-xl bg-red-500/10 text-red-400">
-              <TrendingUp className="w-4 h-4" />
-            </div>
+      {/* Compact Operational KPI Strip (Zero vanity fluff, direct actionable numbers) */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 px-2 mb-6 shrink-0">
+        <div className="bg-[#1a1a1e] rounded-xl p-3.5 border border-white/5 flex items-center justify-between">
+          <div>
+            <span className="text-[11px] text-gray-400 font-medium block">Receivables Due</span>
+            <span className="text-lg font-bold text-red-400">
+              ₹{totalReceivables.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
+            </span>
           </div>
-          <p className="text-2xl font-bold text-red-400">
-            ₹{totalReceivables.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
-          </p>
-          <p className="text-[11px] text-gray-500 mt-1">
-            {clientsWithDues.length} client{clientsWithDues.length === 1 ? "" : "s"} with unpaid balance
-          </p>
+          <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-red-500/10 text-red-400 border border-red-500/20">
+            {clientsWithDues.length} due
+          </span>
         </div>
 
-        {/* Total Collected */}
-        <div className="bg-[#1a1a1e] rounded-2xl p-5 border border-white/5 relative overflow-hidden">
-          <div className="flex items-center justify-between text-xs text-gray-400 mb-2">
-            <span>Payments Collected</span>
-            <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400">
-              <Wallet className="w-4 h-4" />
-            </div>
+        <div className="bg-[#1a1a1e] rounded-xl p-3.5 border border-white/5 flex items-center justify-between">
+          <div>
+            <span className="text-[11px] text-gray-400 font-medium block">Total Collected</span>
+            <span className="text-lg font-bold text-emerald-400">
+              ₹{totalCollected.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
+            </span>
           </div>
-          <p className="text-2xl font-bold text-white">
-            ₹{totalCollected.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
-          </p>
-          <p className="text-[11px] text-emerald-400/80 mt-1">
-            {transactions.filter((t) => t.type === "payment").length} successful payments
-          </p>
+          <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            {transactions.filter((t) => t.type === "payment").length} paid
+          </span>
         </div>
 
-        {/* Active Projects */}
-        <div className="bg-[#1a1a1e] rounded-2xl p-5 border border-white/5 relative overflow-hidden">
-          <div className="flex items-center justify-between text-xs text-gray-400 mb-2">
-            <span>Active Projects</span>
-            <div className="p-2 rounded-xl bg-blue-500/10 text-blue-400">
-              <FolderOpen className="w-4 h-4" />
-            </div>
+        <div className="bg-[#1a1a1e] rounded-xl p-3.5 border border-white/5 flex items-center justify-between">
+          <div>
+            <span className="text-[11px] text-gray-400 font-medium block">Active Projects</span>
+            <span className="text-lg font-bold text-white">
+              {activeProjectsList.length}
+            </span>
           </div>
-          <p className="text-2xl font-bold text-white">{activeProjectsList.length}</p>
-          <p className="text-[11px] text-gray-500 mt-1">
-            {projects.length} total across agency
-          </p>
+          <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20">
+            {projects.length} total
+          </span>
         </div>
 
-        {/* Asset Renewals */}
-        <div className="bg-[#1a1a1e] rounded-2xl p-5 border border-white/5 relative overflow-hidden">
-          <div className="flex items-center justify-between text-xs text-gray-400 mb-2">
-            <span>Domains & Hosting</span>
-            <div className="p-2 rounded-xl bg-purple-500/10 text-purple-400">
-              <Clock className="w-4 h-4" />
-            </div>
+        <div className="bg-[#1a1a1e] rounded-xl p-3.5 border border-white/5 flex items-center justify-between">
+          <div>
+            <span className="text-[11px] text-gray-400 font-medium block">Asset Renewals</span>
+            <span className="text-lg font-bold text-white">
+              {renewals.length}
+            </span>
           </div>
-          <p className="text-2xl font-bold text-white">{renewals.length}</p>
-          <p className="text-[11px] text-gray-500 mt-1">
-            {criticalRenewals.length > 0 ? (
-              <span className="text-amber-400 font-medium">{criticalRenewals.length} need renewal attention</span>
-            ) : (
-              <span className="text-emerald-400 font-medium">All assets safe</span>
-            )}
-          </p>
+          {criticalRenewals.length > 0 ? (
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+              {criticalRenewals.length} urgent
+            </span>
+          ) : (
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              OK
+            </span>
+          )}
         </div>
       </div>
 

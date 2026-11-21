@@ -137,78 +137,85 @@ export default function AdminUsersPage() {
         </div>
       </div>
 
-      <div className="widget-shape-light p-8 flex flex-col shadow-xl mx-2">
-        <div className="flex justify-between items-center mb-6">
-          <h3 className="text-xl font-medium text-gray-900">Users</h3>
+      <div className="bg-[#1a1a1e] rounded-2xl border border-white/5 mx-2 overflow-hidden">
+        <div className="p-4 sm:p-5 border-b border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5">
+            <h3 className="text-base font-bold text-white">Users Directory</h3>
+            <span className="text-xs text-gray-400 bg-white/5 px-2.5 py-0.5 rounded-full border border-white/5">
+              {displayUsers.length} users
+            </span>
+          </div>
           <div className="relative">
-            <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-3.5 h-3.5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               placeholder="Search users..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-4 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 w-56"
+              className="pl-8 pr-3 py-1.5 bg-[#222226] border border-white/10 rounded-xl text-xs text-white placeholder:text-gray-500 focus:outline-none focus:border-white/20 w-56"
             />
           </div>
         </div>
 
         {displayUsers.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 text-gray-400">
-            <Users className="w-12 h-12 mb-4 text-gray-300" />
-            <p className="text-lg font-medium text-gray-500">No users found</p>
+            <Users className="w-10 h-10 mb-3 text-gray-500" />
+            <p className="text-base font-semibold text-white">No users found</p>
           </div>
         ) : (
-          <div className="overflow-x-auto w-full overscroll-x-contain">
-            <table className="w-full text-left border-collapse min-w-[700px]">
+          <div className="w-full">
+            <table className="w-full text-left border-collapse table-auto">
               <thead>
-                <tr className="text-xs text-gray-500 border-b border-gray-100">
-                  <th className="pb-4 font-normal">User</th>
-                  <th className="pb-4 font-normal">Email</th>
-                  <th className="pb-4 font-normal">Role</th>
-                  <th className="pb-4 font-normal">Joined</th>
-                  <th className="pb-4 font-normal">Change Role</th>
+                <tr className="border-b border-white/5 text-[11px] text-gray-400 uppercase tracking-wider bg-white/[0.02]">
+                  <th className="py-2.5 px-3 sm:px-4 font-semibold">User</th>
+                  <th className="py-2.5 px-3 sm:px-4 font-semibold">Email</th>
+                  <th className="py-2.5 px-3 sm:px-4 font-semibold text-center">Role</th>
+                  <th className="py-2.5 px-3 sm:px-4 font-semibold">Joined</th>
+                  <th className="py-2.5 px-3 sm:px-4 font-semibold text-right">Change Role</th>
                 </tr>
               </thead>
-              <tbody className="text-sm">
+              <tbody className="divide-y divide-white/5 text-xs">
                 {displayUsers.map((user) => {
-                  const colorClass = roleColors[user.role] || roleColors.client;
                   return (
-                    <tr key={user.id} className="border-b border-gray-100 border-dashed last:border-0 hover:bg-gray-50/50 transition-colors">
-                      <td className="py-5">
-                        <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-white text-xs font-bold">
+                    <tr key={user.id} className="hover:bg-white/[0.02] transition-colors">
+                      <td className="py-2.5 px-3 sm:px-4">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-7 h-7 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 text-xs font-bold shrink-0">
                             {(user.email?.substring(0, 2) || "U").toUpperCase()}
                           </div>
-                          <span className="font-medium text-gray-900">{user.full_name || "Unnamed User"}</span>
+                          <span className="font-semibold text-white truncate max-w-[160px]">{user.full_name || "Unnamed User"}</span>
                         </div>
                       </td>
-                      <td className="py-5">
-                        <div className="flex items-center gap-2 text-gray-600">
-                          <Mail className="w-3.5 h-3.5 text-gray-400" />
-                          {user.email}
+                      <td className="py-2.5 px-3 sm:px-4">
+                        <div className="flex items-center gap-1.5 text-gray-400">
+                          <Mail className="w-3 h-3 text-gray-500 shrink-0" />
+                          <span className="truncate max-w-[180px]">{user.email}</span>
                         </div>
                       </td>
-                      <td className="py-5">
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${colorClass}`}>
+                      <td className="py-2.5 px-3 sm:px-4 text-center whitespace-nowrap">
+                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border ${
+                          user.role === "admin"
+                            ? "bg-purple-500/10 text-purple-400 border-purple-500/20"
+                            : user.role === "developer"
+                            ? "bg-blue-500/10 text-blue-400 border-blue-500/20"
+                            : "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
+                        }`}>
                           {user.role === "admin" ? "Super Admin" : user.role.charAt(0).toUpperCase() + user.role.slice(1)}
                         </span>
                       </td>
-                      <td className="py-5">
-                        <div className="flex items-center gap-2 text-gray-600">
-                          <Calendar className="w-3.5 h-3.5 text-gray-400" />
-                          {new Date(user.created_at).toLocaleDateString()}
-                        </div>
+                      <td className="py-2.5 px-3 sm:px-4 text-gray-400 whitespace-nowrap">
+                        {new Date(user.created_at).toLocaleDateString()}
                       </td>
-                      <td className="py-5">
+                      <td className="py-2.5 px-3 sm:px-4 text-right whitespace-nowrap">
                         <select
                           value={user.role}
                           onChange={(e) => updateRole(user.id, e.target.value)}
                           disabled={updating === user.id}
-                          className="px-3 py-1.5 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 disabled:opacity-50"
+                          className="px-2.5 py-1 bg-[#222226] border border-white/10 rounded-lg text-xs text-white focus:outline-none focus:border-white/20 disabled:opacity-50"
                         >
-                          <option value="client">Client</option>
-                          <option value="developer">Developer</option>
-                          <option value="admin">Super Admin</option>
+                          <option value="client" className="bg-[#222226]">Client</option>
+                          <option value="developer" className="bg-[#222226]">Developer</option>
+                          <option value="admin" className="bg-[#222226]">Super Admin</option>
                         </select>
                       </td>
                     </tr>

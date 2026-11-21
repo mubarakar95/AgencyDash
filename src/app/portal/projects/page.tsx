@@ -76,8 +76,8 @@ export default function PortalProjectsPage() {
             <p className="text-lg font-medium text-gray-500">No projects yet</p>
           </div>
         ) : (
-          <div className="overflow-x-auto w-full overscroll-x-contain">
-            <table className="w-full text-left border-collapse min-w-[700px]">
+          <div className="w-full">
+            <table className="w-full text-left border-collapse table-auto">
               <thead>
                 <tr className="text-xs text-gray-500 border-b border-gray-100">
                   <th className="pb-4 font-normal">Project</th>

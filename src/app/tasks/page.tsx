@@ -292,124 +292,127 @@ export default function TasksPage() {
           )}
         </div>
       ) : (
-        <div className="widget-shape-light p-8 flex flex-col shadow-xl mx-2">
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="text-xl font-medium text-gray-900">All Tasks</h3>
+        <div className="bg-[#1a1a1e] rounded-2xl border border-white/5 mx-2 overflow-hidden">
+          <div className="p-4 sm:p-5 border-b border-white/5 flex justify-between items-center">
+            <h3 className="text-base font-bold text-white">All Tasks</h3>
+            <span className="text-xs text-gray-400 bg-white/5 px-2.5 py-0.5 rounded-full border border-white/5">
+              {filteredTasks.length} tasks
+            </span>
           </div>
           {filteredTasks.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-gray-400">
-              <ClipboardList className="w-12 h-12 mb-4 text-gray-300" />
-              <p className="text-lg font-medium text-gray-500">No tasks found</p>
+              <ClipboardList className="w-10 h-10 mb-3 text-gray-500" />
+              <p className="text-base font-semibold text-white">No tasks found</p>
             </div>
           ) : (
-          <div className="overflow-x-auto w-full overscroll-x-contain">
-            <table className="w-full text-left border-collapse min-w-[850px]">
+          <div className="w-full">
+            <table className="w-full text-left border-collapse table-auto">
               <thead>
-                <tr className="text-xs text-gray-500 border-b border-gray-100">
-                  <th className="pb-4 font-normal">Task</th>
-                  <th className="pb-4 font-normal">Type</th>
-                  <th className="pb-4 font-normal">Priority</th>
-                  <th className="pb-4 font-normal">Status</th>
-                  <th className="pb-4 font-normal">Project</th>
-                  <th className="pb-4 font-normal">Hours</th>
-                  <th className="pb-4 font-normal">Assignee</th>
-                  <th className="pb-4 font-normal">Due</th>
+                <tr className="border-b border-white/5 text-[11px] text-gray-400 uppercase tracking-wider bg-white/[0.02]">
+                  <th className="py-2.5 px-3 sm:px-4 font-semibold">Task</th>
+                  <th className="py-2.5 px-3 sm:px-4 font-semibold">Type</th>
+                  <th className="py-2.5 px-3 sm:px-4 font-semibold text-center">Priority</th>
+                  <th className="py-2.5 px-3 sm:px-4 font-semibold text-center">Status</th>
+                  <th className="py-2.5 px-3 sm:px-4 font-semibold">Project</th>
+                  <th className="py-2.5 px-3 sm:px-4 font-semibold text-right">Hours</th>
+                  <th className="py-2.5 px-3 sm:px-4 font-semibold">Assignee</th>
+                  <th className="py-2.5 px-3 sm:px-4 font-semibold">Due</th>
                 </tr>
               </thead>
-                <tbody className="text-sm">
+                <tbody className="divide-y divide-white/5 text-xs">
                   {filteredTasks.map((task) => {
                     const TypeIcon = typeFilterConfig[task.type]?.icon || ListTodo;
                     const statusColors: Record<string, string> = {
-                      backlog: "bg-gray-100 text-gray-700",
-                      todo: "bg-blue-100 text-blue-700",
-                      in_progress: "bg-amber-100 text-amber-700",
-                      review: "bg-purple-100 text-purple-700",
-                      done: "bg-green-100 text-green-700",
+                      backlog: "bg-white/5 text-gray-400 border-white/10",
+                      todo: "bg-blue-500/10 text-blue-400 border-blue-500/20",
+                      in_progress: "bg-amber-500/10 text-amber-400 border-amber-500/20",
+                      review: "bg-purple-500/10 text-purple-400 border-purple-500/20",
+                      done: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
                     };
                     const priorityColors: Record<string, string> = {
-                      low: "bg-gray-100 text-gray-600",
-                      medium: "bg-blue-100 text-blue-700",
-                      high: "bg-orange-100 text-orange-700",
-                      urgent: "bg-red-100 text-red-700",
+                      low: "bg-white/5 text-gray-400 border-white/10",
+                      medium: "bg-blue-500/10 text-blue-400 border-blue-500/20",
+                      high: "bg-orange-500/10 text-orange-400 border-orange-500/20",
+                      urgent: "bg-red-500/10 text-red-400 border-red-500/20",
                     };
                     const isOverdue = task.due_date && new Date(task.due_date) < new Date() && task.status !== "done";
                     return (
                       <tr
                         key={task.id}
-                        className="border-b border-gray-100 border-dashed last:border-0 hover:bg-gray-50/50 transition-colors cursor-pointer group"
+                        className="hover:bg-white/[0.02] transition-colors cursor-pointer group"
                         onClick={() => setViewingTask(task)}
                       >
-<td className="py-4">
-                          <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center text-white text-xs font-bold shrink-0">
+                        <td className="py-2.5 px-3 sm:px-4">
+                          <div className="flex items-center gap-2.5">
+                            <div className="w-7 h-7 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 text-xs font-bold shrink-0">
                               <TypeIcon className="w-3.5 h-3.5" />
                             </div>
                             <div className="min-w-0">
                               <div className="flex items-center gap-1.5">
-                                <p className="font-medium text-gray-900 truncate">{task.title}</p>
+                                <p className="font-semibold text-white group-hover:text-blue-400 transition-colors truncate max-w-[180px] sm:max-w-[240px]">{task.title}</p>
                                  {Array.isArray(task.image_urls) && task.image_urls.length > 0 && (
                                   <ImageIcon className="w-3.5 h-3.5 text-gray-400 shrink-0" />
                                 )}
                                 {commentData[task.id]?.count > 0 && (
-                                  <div className={`flex items-center gap-1 px-1.5 py-0.5 rounded-full ${commentData[task.id]?.hasUnread ? "bg-blue-100 text-blue-600" : "bg-gray-100 text-gray-500"}`}>
+                                  <div className={`flex items-center gap-1 px-1.5 py-0.5 rounded-full ${commentData[task.id]?.hasUnread ? "bg-blue-500/10 text-blue-400" : "bg-white/5 text-gray-400"}`}>
                                     <MessageSquare className="w-3 h-3" />
                                     <span className="text-[10px] font-medium">{commentData[task.id].count}</span>
                                   </div>
                                 )}
                               </div>
                               {task.description && (
-                                <p className="text-xs text-gray-500 truncate max-w-[200px]">{task.description}</p>
+                                <p className="text-[11px] text-gray-400 truncate max-w-[180px] sm:max-w-[240px]">{task.description}</p>
                               )}
                             </div>
                           </div>
                         </td>
-                        <td className="py-4">
-                          <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                            task.type === "bug" ? "bg-red-100 text-red-700" :
-                            task.type === "feature" ? "bg-blue-100 text-blue-700" :
-                            task.type === "improvement" ? "bg-amber-100 text-amber-700" :
-                            "bg-gray-100 text-gray-700"
+                        <td className="py-2.5 px-3 sm:px-4 whitespace-nowrap">
+                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border ${
+                            task.type === "bug" ? "bg-red-500/10 text-red-400 border-red-500/20" :
+                            task.type === "feature" ? "bg-blue-500/10 text-blue-400 border-blue-500/20" :
+                            task.type === "improvement" ? "bg-amber-500/10 text-amber-400 border-amber-500/20" :
+                            "bg-white/5 text-gray-400 border-white/10"
                           }`}>
                             {task.type?.charAt(0).toUpperCase() + task.type?.slice(1)}
                           </span>
                         </td>
-                        <td className="py-4">
-                          <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${priorityColors[task.priority] || "bg-gray-100 text-gray-600"}`}>
-                            {task.priority?.charAt(0).toUpperCase() + task.priority?.slice(1)}
+                        <td className="py-2.5 px-3 sm:px-4 text-center whitespace-nowrap">
+                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border ${priorityColors[task.priority] || "bg-white/5 text-gray-400 border-white/10"}`}>
+                            {task.priority?.toUpperCase()}
                           </span>
                         </td>
-                        <td className="py-4">
-                          <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${statusColors[task.status] || "bg-gray-100 text-gray-600"}`}>
-                            {task.status === "in_progress" ? "In Progress" : task.status === "todo" ? "To Do" : task.status?.charAt(0).toUpperCase() + task.status?.slice(1)}
+                        <td className="py-2.5 px-3 sm:px-4 text-center whitespace-nowrap">
+                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border capitalize ${statusColors[task.status] || "bg-white/5 text-gray-400 border-white/10"}`}>
+                            {task.status === "in_progress" ? "In Progress" : task.status === "todo" ? "To Do" : task.status}
                           </span>
                         </td>
-                        <td className="py-4 text-gray-600 text-xs">{task.projects?.name || "—"}</td>
-                        <td className="py-4">
+                        <td className="py-2.5 px-3 sm:px-4 text-gray-300 truncate max-w-[140px]">{task.projects?.name || "—"}</td>
+                        <td className="py-2.5 px-3 sm:px-4 text-right whitespace-nowrap">
                           {task.estimated_hours != null ? (
-                            <span className="text-xs text-gray-300 font-medium">{task.estimated_hours}h</span>
+                            <span className="font-mono text-white font-semibold">{task.estimated_hours}h</span>
                           ) : (
-                            <span className="text-xs text-gray-400">—</span>
+                            <span className="text-gray-500">—</span>
                           )}
                         </td>
-                        <td className="py-4">
+                        <td className="py-2.5 px-3 sm:px-4 whitespace-nowrap">
                           {task.profiles?.full_name || task.profiles?.email ? (
                             <div className="flex items-center gap-1.5">
-                              <div className="w-5 h-5 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-white text-[8px] font-bold">
-                                {(task.profiles.full_name || task.profiles.email).charAt(0)}
+                              <div className="w-5 h-5 rounded-full bg-blue-500/20 border border-blue-500/30 flex items-center justify-center text-blue-400 text-[9px] font-bold">
+                                {(task.profiles.full_name || task.profiles.email).charAt(0).toUpperCase()}
                               </div>
-                              <span className="text-xs text-gray-600">{(task.profiles.full_name || task.profiles.email).split(" ")[0]}</span>
+                              <span className="text-gray-300">{(task.profiles.full_name || task.profiles.email).split(" ")[0]}</span>
                             </div>
                           ) : (
-                            <span className="text-xs text-gray-400">—</span>
+                            <span className="text-gray-500">—</span>
                           )}
                         </td>
-                        <td className="py-4">
+                        <td className="py-2.5 px-3 sm:px-4 whitespace-nowrap">
                           {task.due_date ? (
-                            <span className={`text-xs ${isOverdue ? "text-red-500 font-medium" : "text-gray-500"}`}>
+                            <span className={`font-medium ${isOverdue ? "text-red-400" : "text-gray-400"}`}>
                               {new Date(task.due_date).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
                             </span>
                           ) : (
-                            <span className="text-xs text-gray-400">—</span>
+                            <span className="text-gray-500">—</span>
                           )}
                         </td>
                       </tr>
